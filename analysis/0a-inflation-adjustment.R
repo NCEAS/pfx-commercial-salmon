@@ -1,7 +1,7 @@
 # Read in, cleanup, and write out a version of the data
 
 library(dplyr)
-load("data/cfecCleaned2_salmon.Rdata")
+load("data-generated/cfecCleaned2_salmon.Rdata")
 names(cfec) <- tolower(names(cfec))
 cfec <- as_data_frame(cfec)
 names(cfec) <- gsub("\\.", "_", names(cfec))
@@ -36,4 +36,4 @@ cfec$stat6 = as.numeric(cfec$stat6)
 cfec <- left_join(cfec, region)
 
 # devtools::install_github("wesm/feather/R")
-feather::write_feather(cfec, "portfolio/data-generated/salmon.feather")
+feather::write_feather(cfec, "data-generated/salmon.feather")

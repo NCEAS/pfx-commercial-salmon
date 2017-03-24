@@ -30,3 +30,8 @@ paper/.Rhistory
 *.rda
 
 *.RdataTmp
+.Rproj.user
+
+data-generated/salmon.feather
+
+.Rhistory

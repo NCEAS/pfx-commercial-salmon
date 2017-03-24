@@ -117,7 +117,7 @@ Increasing trends toward specialization in Alaska salmon fisheries may be accept
   
 ```{r fig1, echo=FALSE, fig.pos="placeHere", fig.cap="Trends in participation, landed catch, mean annual revenue, and effective species diversity for eight selected Alaska salmon fisheries. "}
 # trends in participation, 
-cfec_all = readRDS("../../portfolio/data-generated/salmon_data_for_paper.rds")
+cfec_all = readRDS("../data-generated/salmon_data_for_paper.rds")
 people = group_by(cfec_all, p_fshy, year) %>% 
   summarize(n = length(unique(p_holder))) %>% 
   filter(substr(p_fshy,1,1)=="S")
@@ -179,7 +179,7 @@ weight2$Permit[which(weight2$Permit=="S05B")] = "State-troll"
 g2 = ggplot(weight2, aes(year, log10(w/n), color = Permit)) + geom_line() + ylab("Log10 tons per person") + xlab("Year") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
 # trends in revenue
-dat.annual = readRDS(file="../../portfolio/data-generated/salmon-annual-for-modeling.rds")
+dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
 dat.annual = group_by(dat.annual[which(dat.annual$strategy_permit %in% c("S01A", "S01E", "S01K", "S01M", "S03A", "S03E", "S03T", "S05B")),], year, strategy_permit) %>% 
   summarize(meanrev = mean(revenue), meandiv = mean(specDiv))
 names(dat.annual)[which(names(dat.annual)=="strategy_permit")]="Permit"
@@ -206,7 +206,7 @@ gridExtra::grid.arrange(g1,g2,g3, g4, ncol=2)
 \break  
   
 ```{r fig2, echo=FALSE, fig.pos="placeHere", fig.cap="CV and mean annual revenue by salmon permit, 1975-2016. Effective species diversity of catch are shown by circle size (effective species diversity = 1 / Simpson's diversity), and fishing gears are shown with color shading.", warning=FALSE, message=FALSE}
-# dat.annual = readRDS(file="../../portfolio/data-generated/salmon-annual-for-modeling.rds")
+# dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
 # 
 # people = group_by(cfec_all, p_fshy, year) %>% 
 #   summarize(n = length(unique(p_holder))) %>% 
@@ -271,7 +271,7 @@ gridExtra::grid.arrange(g1,g2,g3, g4, ncol=2)
 #print(g1)
 #dev.off()
 
-dat.annual <- read.table("../../salmon/data-generated/bubble_plot_data_fig2.csv", stringsAsFactors = FALSE, header = TRUE)
+dat.annual <- read.table("../data-generated/bubble_plot_data_fig2.csv", stringsAsFactors = FALSE, header = TRUE)
 
 dat.annual <- mutate(dat.annual,
   gear = factor(gear, levels = c("Drift gillnet", "Set gillnet", "Hand troll",
@@ -320,9 +320,9 @@ print(g)
   
 ```{r fig3, echo=FALSE, fig.pos="placeHere", fig.cap="Harvest of hatchery produced salmon through time, species, and area. Shown are the numbers of hatchery fish caught by fisheries (top row), and the hatchery contribution each species to total catch (bottom row). Areas represents combined Kodiak and Alaska Peninsula ('KO - AP'), Southeast ('SE') and Prince William Sound ('PWS'). "}
 
-seak_hatch = read.csv("../../salmon/data-generated/seak_hatcheryHarvest.csv")
-pws_hatch = read.csv("../../salmon/data-generated/pws_hatcheryHarvest.csv")
-kodiak_hatch = read.csv("../../salmon/data-generated/kodiak_hatcheryHarvest.csv")
+seak_hatch = read.csv("../data-generated/seak_hatcheryHarvest.csv")
+pws_hatch = read.csv("../data-generated/pws_hatcheryHarvest.csv")
+kodiak_hatch = read.csv("../data-generated/kodiak_hatcheryHarvest.csv")
 
 seak_hatch = melt(seak_hatch, id.vars = c("Year"))
 pws_hatch = melt(pws_hatch, id.vars = c("Year"))
@@ -355,7 +355,7 @@ g1 = ggplot(dat, aes(Year, value)) +
   facet_wrap(~region, scale="free_y") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
 # bring in total harvest data (hatchery + wild)
-hatch = read.csv("../../salmon/data-generated/commonPropertyCommercialCatch.csv",
+hatch = read.csv("../data-generated/commonPropertyCommercialCatch.csv",
   stringsAsFactors = FALSE)
 
 kodap1 = hatch[which(hatch$Region%in%c("Kodiak") & hatch$Year <= 1995),]
@@ -412,14 +412,14 @@ names(dat)[which(names(dat)=="value")] = "hatchery_harvest_millions"
 names(hatch)[which(names(hatch)=="value")] = "percent_hatchery"
 dat = left_join(dat, hatch)
 dat$total_harvest = dat$hatchery_harvest_millions / (dat$percent_hatchery/100)
-saveRDS(dat, file="../../salmon/data-generated/hatchery_harvest_millions.rds")
+saveRDS(dat, file="../data-generated/hatchery_harvest_millions.rds")
 ```
   
 \break  
   
 ```{r fig4, echo=FALSE, fig.pos="placeHere", fig.cap="Effects of the fraction of hatchery fish on (1) mean annual revenue, and (2) sd of annual revenue, for three areas ('KO' = Kodiak, 'PWS' = Prince William Sound, 'SE' = Southeast). Effect sizes are presented as the effects of a change of 0% hatchery fish to 20% hatchery fish. Dots represent mean estimates, and error bars represent +/- 1 standard error"}
 
-df = readRDS(file=paste0("../../salmon/data-generated/","region","_df.rds"))
+df = readRDS(file=paste0("../data-generated/","region","_df.rds"))
 cbPalette <- c("#009E73", "#4B2E83", "#999999", "#CC79A7", "#D55E00")
 
 df$fishery[which(df$fishery=="Prince William Sound")] = "PWS"
@@ -462,7 +462,7 @@ gridExtra::grid.arrange(p1, p2, ncol=1)
   
 ```{r fig5, fig.pos="placeHere", fig.cap="Time varying effects of increasing the effective diversity (1/Simpson's diversity) of catch from 1 to 2 species (presented as log ratio). This shows declining benefits of diversification on mean revenue for individuals in most fisheries.", echo=FALSE}
 # make yearpermit df
-diffdat = readRDS(file="../../salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 permits = levels(as.factor(diffdat$permit))
 # note that we have to use factor() here instead of unique() because
@@ -472,12 +472,12 @@ yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
 yearpermit$permit = substr(yearpermit$yrpermit,6,9)
 
 # grab original data to look at permit names
-diffdat = readRDS(file="../../portfolio/data-generated/salmon-diff-for-modeling.rds")
+diffdat = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 years = seq(min(diffdat$year), max(diffdat$year)) 
 #permits = levels(as.factor(diffdat$permit))
 
 yearpermitold=yearpermit
-load("../../salmon/analysis/model-linear.Rdata")
+load("../analysis/model-linear.Rdata")
 yearpermit=yearpermitold
 
 est = extract(mod, permute="TRUE")

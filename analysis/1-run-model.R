@@ -1,6 +1,6 @@
 library(dplyr)
 
-diffdat = readRDS(file="salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="data-generated/salmon.rds")
 
 diffdat = filter(diffdat, !is.na(days.change))
 
@@ -67,10 +67,10 @@ if(modelname=="linear") {
   options(mc.cores = parallel::detectCores())
 
   # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
-  mod = stan(file = 'salmon/analysis/portfolio-offset-linear.stan',data = stan_data,
-    verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+  mod = stan(file = 'analysis/portfolio-offset-linear.stan',data = stan_data,
+    verbose = TRUE, chains = 3, thin = 1, warmup = 2000, iter = 4000, pars = stan_pars)
 
-  save.image("salmon/analysis/model-linear.Rdata")
+  save.image("analysis/model-linear.Rdata")
 }
 
 if(modelname=="linear_varrw") {

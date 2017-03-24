@@ -21,12 +21,12 @@ library(knitr)
 library(ggplot2)
 library(date)
 library(reshape2)
-cfec <- feather::read_feather("portfolio/data-generated/salmon.feather")
+cfec <- feather::read_feather("data-generated/salmon.feather")
 
-maxYear = 2015
+maxYear = 2016
 cfec = filter(cfec, year %in% seq(1975,maxYear))
 
-saveRDS(cfec, "portfolio/data-generated/salmon_data_for_paper.rds")
+saveRDS(cfec, "data-generated/salmon_data_for_paper.rds")
 
 # convert 6-dig p_fshy codes to 5 digits
 # removing blank space - now they're all length(5)
@@ -305,11 +305,11 @@ Save the data for modeling:
 cfecAnnual <- as_data_frame(cfecAnnual)
 ndat$annual <- nrow(cfecAnnual)
 
-saveRDS(cfecAnnual, file="portfolio/data-generated/salmon-annual-for-modeling.rds")
+saveRDS(cfecAnnual, file="data-generated/salmon-annual-for-modeling.rds")
 
 cfecAnnual$specDiv.change = cfecAnnual$specDiv - cfecAnnual$specdiv.prev
 cfecAnnual.diff = cfecAnnual[is.na(cfecAnnual$specDiv.change)==FALSE, ]
-saveRDS(cfecAnnual.diff, file="portfolio/data-generated/salmon-diff-for-modeling.rds")
+saveRDS(cfecAnnual.diff, file="data-generated/salmon-diff-for-modeling.rds")
 #ndat$annual_diff <- nrow(cfecAnnual.diff)
 #saveRDS(ndat, file = "portfolio/data-generated/ndat.rds")
 ```

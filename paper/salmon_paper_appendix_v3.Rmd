@@ -27,7 +27,7 @@ library(zoo)
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 revenueThreshold = 10000
 
-dat.annual = readRDS(file="../../portfolio/data-generated/salmon-annual-for-modeling.rds")
+dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
 
 # single permit holders, salmon permits
 dat.annual  = filter(dat.annual ,npermit==1 & substr(strategy_permit,1,1)=="S") %>%
@@ -48,7 +48,7 @@ agg.annual = group_by(dat.annual, strategy_permit, year) %>%
     low = quantile(revenue,0.25),
     upp = quantile(revenue,0.75))
 
-dat.diff = readRDS(file="../../portfolio/data-generated/salmon-diff-for-modeling.rds")
+dat.diff = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 dat.diff = dat.diff[which(dat.diff$revenue >= revenueThreshold & dat.diff$revenue.prev >= revenueThreshold), ]
 
 agg.diff = group_by(dat.diff, strategy_permit) %>% 
@@ -59,8 +59,8 @@ dat.diff = dat.diff[dat.diff$strategy_permit%in%c("S01A","S01E","S01K","S01M",
   "S03A","S03E"),]
 
 # Also load in raw CFEC data for plots
-#cfec <- feather::read_feather("../../portfolio/data-generated/salmon.feather")
-cfec = readRDS("../../portfolio/data-generated/salmon_data_for_paper.rds")
+#cfec <- feather::read_feather("../portfolio/data-generated/salmon.feather")
+cfec = readRDS("../data-generated/salmon_data_for_paper.rds")
 cfec = cfec[cfec$p_fshy%in%c("S 01A", "S 01E", "S 01K", "S 03A", "S 03E", "S 01M"),]
 cfec$year = as.numeric(substr(cfec$landdate, 1, 4))
 
@@ -250,7 +250,7 @@ g6 = group_by(cfec.raw[cfec.raw$p_fshy=="S 03E" & cfec.raw$spec %in% c("CHUM","C
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
     'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
 
-dat.diff = readRDS(file="../../portfolio/data-generated/salmon-diff-for-modeling.rds")
+dat.diff = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 dat.diff = dat.diff[which(dat.diff$revenue >= 10000 & dat.diff$revenue.prev >= 10000), ]
 dat.salmon = dat.diff[dat.diff$strategy_permit%in%c("S01A", "S01E", "S01K", "S03A", "S03E","S01M"),]
 
@@ -366,12 +366,12 @@ Previous work on long term trends in Alaska salmon markets have highlighted effe
 
 ```{r, echo=FALSE}
 library(knitr)
-d = read.table("../../salmon/data-generated/granger_table.csv", sep=",", header=TRUE)
+d = read.table("../data-generated/granger_table.csv", sep=",", header=TRUE)
 kable(d)
 ```
 
 ```{r echo=FALSE, eval=FALSE}
-#Z = read.table("../../salmon/data-generated/granger_table_s01a.csv", header=TRUE)
+#Z = read.table("../salmon/data-generated/granger_table_s01a.csv", header=TRUE)
 ```
 
 \break  
@@ -380,7 +380,7 @@ kable(d)
 
 ```{r figa5, fig.pos="placeHere", fig.cap="Time varying effects of increasing the effective species diversity of catch from 1 to 2 species, on log standard deviation of revenue.", echo=FALSE}
 
-diffdat = readRDS(file="../../salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 permits = levels(as.factor(diffdat$permit))
 # note that we have to use factor() here instead of unique() because
@@ -391,11 +391,11 @@ yearpermit$permit = substr(yearpermit$yrpermit,6,9)
 yearpermitold=yearpermit
 
 # grab original data to look at permit names
-diffdat = readRDS(file="../../portfolio/data-generated/salmon-diff-for-modeling.rds")
+diffdat = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 #permits = levels(as.factor(diffdat$permit))
 
-load("../../salmon/analysis/model-linear.Rdata")
+load("../analysis/model-linear.Rdata")
 yearpermit=yearpermitold
 
 est = rstan::extract(mod, permute="TRUE")
@@ -447,7 +447,7 @@ g1
 
 ```{r figa6, echo=FALSE, fig.pos="placeHere", fig.cap="Time varying intercepts on estimated mean revenue, by permit. These are interpreted as the mean change in revenue for each permit holder in each year (positive equates to increasing revenue, etc), after accounting for effects of catch diversification and days fished."}
 # grab original data to look at permit names
-diffdat = readRDS(file="../../salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="../data-generated/salmon.rds")
 
 years = seq(min(diffdat$year), max(diffdat$year))
 permits = levels(as.factor(diffdat$permit))
@@ -459,7 +459,7 @@ yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
 yearpermit$permit = substr(yearpermit$yrpermit,6,9)
 
 yearpermitold=yearpermit
-load("../../salmon/analysis/model-linear.Rdata")
+load("../analysis/model-linear.Rdata")
 yearpermit=yearpermitold
 est = rstan::extract(mod, permute="TRUE")
 
@@ -486,7 +486,7 @@ g1
 ```
 
 ```{r figa7, eval=FALSE,echo=FALSE}
-load("../../salmon/analysis/cv-model-simple.Rdata")
+load("../analysis/cv-model-simple.Rdata")
 # groups here are 80% pink vs 97% pink
 
 yrs = 1986:2014
@@ -508,7 +508,7 @@ g1
 ```
 
 ```{r, echo=FALSE, fig.pos="placeHere", fig.cap = "Change in natural log of landed weight versus change in effective species diversity, by permit. Decreases in landed weight is often accompanied by reduced catch diversity."}
-diffdat = readRDS(file="../../salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="../data-generated/salmon.rds")
 diffdat = filter(diffdat, !is.na(days.change))
 
 g1 = ggplot(diffdat, aes(log(weight)-log(weight.prev), specDiv.change)) + geom_point(alpha=0.15, col="blue", size=0.4) + facet_wrap(~ strategy_permit) + xlab("Change in ln annual landed weight") + ylab("Change in effective species diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -520,11 +520,11 @@ g1
 ```{r figa8, echo=FALSE, eval=FALSE}
 # fig.pos="placeHere", fig.cap="Time varying effects of adding 1 species on revenue (measured in ln dollars) for purse seine permit in Prince William Sound (S01E). This figure illustrates two things: (1) the benefit of adding more species diminishes as a function of past diversity, and (2) the economic benefit to adding more species has been reduced through time."
 # grab original data to look at permit names
-diffdat = readRDS(file="../../salmon/data-generated/salmon.rds")
+diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 #permits = levels(as.factor(diffdat$permit))
 
-load("../../salmon/analysis/model-linear.Rdata")
+load("../analysis/model-linear.Rdata")
 yearpermit=yearpermitold
 
 est = extract(mod, permute="TRUE")
@@ -573,7 +573,7 @@ yearpermit$b0_hi = apply(est$b0_str_yr,2,quantile,0.975)
 S01E = yearpermit[yearpermit$permit=="S01E",]
 names(S01E)[which(names(S01E)=="year")]="Year"
 
-returns = readxl::read_excel("../../salmon/paper/salmon_returns_PWS.xlsx")
+returns = readxl::read_excel("../paper/salmon_returns_PWS.xlsx")
 pinkPWS = returns[,c("Year", "Pink_total", "Chum_total")]
 pinkPWS = pinkPWS[which(pinkPWS$Year >= 1975),]
 pinkPWS$diff = c(NA, diff(log(pinkPWS$Pink_total)))

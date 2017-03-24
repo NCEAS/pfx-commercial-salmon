@@ -3,7 +3,7 @@ revenueThreshold = 10000
 
 #dat.diff = readRDS(file="portfolio/data-generated/cfec-diff-for-modeling.rds")
 
-dat.diff = readRDS(file="portfolio/data-generated/salmon-diff-for-modeling.rds")
+dat.diff = readRDS(file="data-generated/salmon-diff-for-modeling.rds")
 
 #group_by(cfec.diff[cfec.diff$permit=="S01E",], year) %>%
 #  summarize(g = sum(revenue))
@@ -31,4 +31,4 @@ dat.salmon$year_permit = as.factor(paste(dat.salmon$year, dat.salmon$strategy_pe
 
 length(unique(dat.salmon$p_holder))
 
-saveRDS(dat.salmon, file="salmon/data-generated/salmon.rds")
+saveRDS(dat.salmon, file="data-generated/salmon.rds")
