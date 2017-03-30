@@ -29,6 +29,11 @@ revenueThreshold = 10000
 
 dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
 
+#temp = group_by(dat.annual[dat.annual$permit %in% c("S03E", "S03A", "S01E", #"S01A", "S01K", "S01L"),], year, permit) %>% 
+#  summarize(diversity = mean(specDiv), price = sum(revenue)/sum(weight), #revenue = log(mean(revenue)), 
+#    weight = log(mean(weight))) %>% 
+#  ggplot(aes(diversity, weight, color = price)) + geom_point() + #facet_wrap(~permit)
+
 # single permit holders, salmon permits
 dat.annual  = filter(dat.annual ,npermit==1 & substr(strategy_permit,1,1)=="S") %>%
   group_by(strategy_permit) %>% 
