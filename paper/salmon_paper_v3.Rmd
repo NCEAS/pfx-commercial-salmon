@@ -1,6 +1,5 @@
 ---
-title: 'Reduced diversity and increased specialization of Alaska salmon fishermen:
-  effects on variation in individual revenues'
+title: "Effects of increased specialization and hatchery production on revenue variability for individual Alaskan salmon fishers"
 author: "Eric, Sean, Ole, Rich, Jordan, Jen, Anne, Alan, Milo, Ben"
 date: ''
 output:
@@ -10,14 +9,6 @@ output:
   word_document: default
 bibliography: CatchPortfolios_salmon.bib
 ---
-
-<!-- Sean: Regarding the title, isn't reduced diversity and increased specialization two ways of saying the same thing? 
-
-Maybe something like "Effects of increased specialization and hatchery production on revenue variability for individual Alaskan salmon fishers"?
-
-Or a title that states the result 
-
--->
 
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE, tidy=FALSE, tidy.opts=list(width.cutoff=60), warning = FALSE, message = FALSE)
