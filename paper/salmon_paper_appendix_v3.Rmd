@@ -400,7 +400,7 @@ diffdat = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 #permits = levels(as.factor(diffdat$permit))
 
-load("../analysis/model-linear.Rdata")
+load("../analysis/model-linear-iid.Rdata")
 yearpermit=yearpermitold
 
 est = rstan::extract(mod, permute="TRUE")
@@ -464,7 +464,7 @@ yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
 yearpermit$permit = substr(yearpermit$yrpermit,6,9)
 
 yearpermitold=yearpermit
-load("../analysis/model-linear.Rdata")
+load("../analysis/model-linear-iid.Rdata")
 yearpermit=yearpermitold
 est = rstan::extract(mod, permute="TRUE")
 
@@ -529,7 +529,7 @@ diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
 #permits = levels(as.factor(diffdat$permit))
 
-load("../analysis/model-linear.Rdata")
+load("../analysis/model-linear-iid.Rdata")
 yearpermit=yearpermitold
 
 est = extract(mod, permute="TRUE")
