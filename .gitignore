@@ -35,3 +35,5 @@ paper/.Rhistory
 data-generated/salmon.feather
 
 .Rhistory
+
+*.docx
