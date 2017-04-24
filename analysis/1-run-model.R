@@ -48,7 +48,7 @@ if(modelname=="quadratic") {
 
   # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
   mod = stan(file = 'salmon/analysis/portfolio-offset-quadratic.stan',data = stan_data,
-    verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
   save.image("salmon/analysis/model-quadratic.Rdata")
 
@@ -68,7 +68,7 @@ if(modelname=="linear") {
 
   # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
   mod = stan(file = 'analysis/portfolio-offset-linear.stan',data = stan_data,
-    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 6000, pars = stan_pars)
+    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
   save.image("analysis/model-linear.Rdata")
 }
@@ -86,7 +86,7 @@ if(modelname=="linear-iid") {
 
   # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
   mod = stan(file = 'analysis/portfolio-offset-linear_iid.stan',data = stan_data,
-    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 6000, pars = stan_pars, control = list(adapt_delta=0.99))
+    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars, control = list(adapt_delta=0.99))
 
   save.image("analysis/model-linear-iid.Rdata")
 }
@@ -105,7 +105,7 @@ if(modelname=="linear_varrw") {
 
   # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
   mod = stan(file = 'salmon/analysis/portfolio-offset-linear-varrw.stan',data = stan_data,
-    verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+    verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
   save.image("salmon/analysis/model-linear-varrw.Rdata")
 }
@@ -122,7 +122,7 @@ options(mc.cores = parallel::detectCores())
 
 # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
 mod = stan(file = 'salmon/analysis/portfolio-offset-linear-nointeraction.stan',data = stan_data,
-  verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+  verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
 save.image("salmon/analysis/model-linear-nointeractions.Rdata")
 
@@ -145,7 +145,7 @@ options(mc.cores = parallel::detectCores())
 
 # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
 mod = stan(file = 'salmon/analysis/portfolio-offset-linear.stan',data = stan_data,
-  verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+  verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
 save.image("salmon/analysis/model-linear.Rdata")
 

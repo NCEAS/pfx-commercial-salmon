@@ -299,7 +299,238 @@ gridExtra::grid.arrange(g1, g2, g3, h1, h2, h3, nrow=2)
 gridExtra::grid.arrange(g4, g5, g6, h4, h5, h6, nrow=2)
 ```
 
-\break 
+
+\break  
+
+## Model Results  
+
+```{r figa10a, echo=FALSE, fig.pos="placeHere", fig.cap = "Change in effective catch diversity, year over year, by permit. Change in diversity is calculated as diversity in the current year minus diversity in the previous year (thus, positive values represent diversity has increased). The solid line represents the mean, and shaded region represents 95% intervals."}
+
+diffdat = readRDS(file="../data-generated/salmon.rds")
+
+# make time series of the distribution of changes in species diversity
+g = group_by(diffdat, strategy_permit, year) %>% 
+  summarize(mean = mean(specDiv - specdiv.prev),
+    lower = quantile(specDiv - specdiv.prev, 0.025),
+    upper = quantile(specDiv - specdiv.prev, 0.975))
+
+g1 = ggplot(g, aes(year, mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha=0.3, fill="blue") + geom_line(color="blue") + facet_wrap(~strategy_permit) + xlab("Year") + ylab("Change in effective catch diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+g1
+```
+
+
+```{r figa6, echo=FALSE, fig.pos="placeHere", fig.cap="Time varying intercepts on estimated mean revenue, by permit. These are interpreted as the mean change in revenue for each permit holder in each year (positive equates to increasing revenue, etc), after accounting for effects of catch diversification and days fished."}
+# grab original data to look at permit names
+diffdat = readRDS(file="../data-generated/salmon.rds")
+
+years = seq(min(diffdat$year), max(diffdat$year))
+permits = levels(as.factor(diffdat$permit))
+
+# note that we have to use factor() here instead of unique() because
+# that's the same as the ordering in the estimation code
+yearpermit = data.frame("yrpermit"=levels(as.factor(diffdat$year_permit)))
+yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
+yearpermit$permit = substr(yearpermit$yrpermit,6,9)
+
+yearpermitold=yearpermit
+load("../analysis/model-linear-iid.Rdata")
+yearpermit=yearpermitold
+est = rstan::extract(mod, permute="TRUE")
+
+yearpermit$b0 = apply(est$b0_str_yr,2,median)
+yearpermit$b0_low = apply(est$b0_str_yr,2,quantile,0.025)
+yearpermit$b0_hi = apply(est$b0_str_yr,2,quantile,0.975)
+
+yearpermit2 = yearpermit
+yearpermit2$permit[which(yearpermit2$permit=="S01A")] = "SE-seine"
+yearpermit2$permit[which(yearpermit2$permit=="S01E")] = "PWS-seine"
+yearpermit2$permit[which(yearpermit2$permit=="S01K")] = "KO-seine"
+yearpermit2$permit[which(yearpermit2$permit=="S01M")] = "AP-seine"
+yearpermit2$permit[which(yearpermit2$permit=="S03A")] = "SE-gillnet"
+yearpermit2$permit[which(yearpermit2$permit=="S03E")] = "PWS-gillnet"
+
+g1 = ggplot(data=yearpermit2) + 
+  geom_ribbon(aes(x=year,ymin=b0_low,ymax=b0_hi),alpha=0.3) +
+  geom_line(aes(x=year,y=b0)) + 
+  facet_wrap(~permit) + xlab("Year") + 
+  ylab("Intercepts on mean") + 
+  geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1
+```
+
+```{r figa5, fig.pos="placeHere", fig.cap="Time varying effects of increasing the effective species diversity of catch from 1 to 2 species, on log standard deviation of revenue.", echo=FALSE}
+
+diffdat = readRDS(file="../data-generated/salmon.rds")
+years = seq(min(diffdat$year), max(diffdat$year))
+permits = levels(as.factor(diffdat$permit))
+# note that we have to use factor() here instead of unique() because
+# that's the same as the ordering in the estimation code
+yearpermit = data.frame("yrpermit"=levels(as.factor(diffdat$year_permit)))
+yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
+yearpermit$permit = substr(yearpermit$yrpermit,6,9)
+yearpermitold=yearpermit
+
+# grab original data to look at permit names
+diffdat = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
+years = seq(min(diffdat$year), max(diffdat$year))
+#permits = levels(as.factor(diffdat$permit))
+
+load("../analysis/model-linear-iid.Rdata")
+yearpermit=yearpermitold
+
+est = rstan::extract(mod, permute="TRUE")
+
+# start with making time series of estimates on mean
+# challenge is that they're time varying quadratic functions
+# do facet_wrap of estimates by year
+
+# effect of adding more 1 species from 1. specdiv.prev = 1
+
+specdiv.prev = seq(1, 5, by=0.1)
+specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
+x1 = log(specdiv/specdiv.prev)
+x2 = log(specdiv/specdiv.prev) * specdiv.prev
+x3 = log(specdiv/specdiv.prev) * specdiv.prev^2
+
+df = expand.grid("year"=1:length(years), "diversity" = seq(1,length(x1)), "permit"=1:6)
+df$permits = permits[df$permit]
+df$years = years[df$year]
+df$x = specdiv.prev[df$diversity]
+df$pred = 0
+df$low = 0
+df$high = 0
+
+df$permits[which(df$permits=="S01A")] = "SE-seine"
+df$permits[which(df$permits=="S01E")] = "PWS-seine"
+df$permits[which(df$permits=="S01K")] = "KO-seine"
+df$permits[which(df$permits=="S01M")] = "AP-seine"
+df$permits[which(df$permits=="S03A")] = "SE-gillnet"
+df$permits[which(df$permits=="S03E")] = "PWS-gillnet"
+
+for(i in 1:nrow(df)) {
+  #tmp = est$g0 + est$g0_strategy[,df$permit[i]] + 
+  tmp = 
+    x1[df$diversity[i]] * (est$g_1[,df$year[i], df$permit[i]])# +
+    #x2[df$diversity[i]] * (est$g_2[,df$year[i], df$permit[i]]+est$g2_str_yr_mu)
+  df$pred[i] = median(tmp)
+  df$low[i] = quantile(tmp,0.025)
+  df$high[i] = quantile(tmp,0.975)
+}
+
+g1 = ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
+  geom_line() +
+  geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
+  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal benefit") + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1
+``` 
+
+
+```{r figa7, eval=FALSE,echo=FALSE}
+load("../analysis/cv-model-simple.Rdata")
+# groups here are 80% pink vs 97% pink
+
+yrs = 1986:2014
+
+hist(rstan::extract(mod)[["g_offset"]], 40, col="grey", xlab="Effect of specializing on pink (sd)")
+
+xx = exp(rstan::extract(mod)[["sd_yr"]])
+df.gen = data.frame("year"=yrs, "mean" = apply(xx, 2, mean), "low" = apply(xx, 2, quantile, 0.025),
+  "hi" = apply(xx, 2, quantile, 0.975), "strategy"="pink:chum")
+
+offset = matrix(rstan::extract(mod)[["g_offset"]],ncol=1) %*% matrix(rep(1,length(yrs)), nrow=1)
+xx = exp(extract(mod)[["sd_yr"]] + offset)
+df.spec = data.frame("year"=yrs, "mean" = apply(xx, 2, mean), "low" = apply(xx, 2, quantile, 0.025),
+  "hi" = apply(xx, 2, quantile, 0.975), "strategy"="pink")
+
+g1 = ggplot(data=rbind(df.gen,df.spec), aes(year, mean, group=strategy, fill=strategy)) + geom_ribbon(aes(ymin=low,ymax=hi), alpha=0.5) + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1
+```
+
+
+```{r figa8, echo=FALSE, eval=FALSE}
+# fig.pos="placeHere", fig.cap="Time varying effects of adding 1 species on revenue (measured in ln dollars) for purse seine permit in Prince William Sound (S01E). This figure illustrates two things: (1) the benefit of adding more species diminishes as a function of past diversity, and (2) the economic benefit to adding more species has been reduced through time."
+# grab original data to look at permit names
+diffdat = readRDS(file="../data-generated/salmon.rds")
+years = seq(min(diffdat$year), max(diffdat$year))
+#permits = levels(as.factor(diffdat$permit))
+
+load("../analysis/model-linear-iid.Rdata")
+yearpermit=yearpermitold
+
+est = extract(mod, permute="TRUE")
+
+# start with making time series of estimates on mean
+# challenge is that they're time varying quadratic functions
+# do facet_wrap of estimates by year
+
+# effect of adding more 1 species from 1. specdiv.prev = 1
+
+specdiv.prev = seq(1, 5, by=0.1)
+specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
+x1 = log(specdiv/specdiv.prev)
+x2 = log(specdiv/specdiv.prev) * specdiv.prev
+
+df = expand.grid("year"=1:29, "diversity" = seq(1,length(x1)), "permit"=1:6)
+df$permits = permits[df$permit]
+df$years = years[df$year]
+df$x = specdiv.prev[df$diversity]
+df$pred = 0
+df$low = 0
+df$high = 0
+b0_indx = match(paste(as.character(df$years), as.character(df$permits)), as.character(yearpermit$yrpermit)) 
+
+for(i in 1:nrow(df)) {
+  tmp = x1[df$diversity[i]] * (est$b_1[,df$year[i], df$permit[i]])# + x2[df$diversity[i]] * (est$b_2[,df$year[i], df$permit[i]]+est$b2_str_yr_mu)
+  df$pred[i] = median(tmp)
+  df$low[i] = quantile(tmp,0.025)
+  df$high[i] = quantile(tmp,0.975)
+}
+df_s01e_b1 = df
+#ggplot(df[df$permits=="S01E",], aes(x=x,y=pred,group=years)) +
+#  #geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
+#  geom_line() +
+#  facet_wrap(~years) + xlab("Previous species diversity") + ylab("Predicted #benefit of adding +1 spp (ln $)")
+
+```
+
+```{r figa11, echo=FALSE, fig.pos="placeHere", fig.cap = "Change in natural log of landed weight versus change in effective species diversity, by permit. Decreases in landed weight is often accompanied by reduced catch diversity."}
+diffdat = readRDS(file="../data-generated/salmon.rds")
+diffdat = filter(diffdat, !is.na(days.change))
+
+g1 = ggplot(diffdat, aes(log(weight)-log(weight.prev), specDiv.change)) + geom_point(alpha=0.15, col="blue", size=0.4) + facet_wrap(~ strategy_permit) + xlab("Change in ln annual landed weight") + ylab("Change in effective species diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1
+```
+
+
+```{r figa12, echo=FALSE, fig.pos="placeHere", fig.cap = "As model validation, we can compare the estimated intercepts for PWS S01E (purse seine) representing average year to year change in revenue versus the change year over year in ln(pink salmon returns). Correlation between them is ~ 0.8. This suggests (as expected) people on average make a lot more money in years when pink salmon returns are high. [EW side note: diversification may only be beneficial here when returns and prices are both low.]"}
+
+yearpermit$b0 = apply(est$b0_str_yr,2,median)
+yearpermit$b0_low = apply(est$b0_str_yr,2,quantile,0.025)
+yearpermit$b0_hi = apply(est$b0_str_yr,2,quantile,0.975)
+
+S01E = yearpermit[yearpermit$permit=="S01E",]
+names(S01E)[which(names(S01E)=="year")]="Year"
+
+returns = readxl::read_excel("../paper/salmon_returns_PWS.xlsx")
+pinkPWS = returns[,c("Year", "Pink_total", "Chum_total")]
+pinkPWS = pinkPWS[which(pinkPWS$Year >= 1975),]
+pinkPWS$diff = c(NA, diff(log(pinkPWS$Pink_total)))
+
+pinkPWS = dplyr::left_join(pinkPWS, S01E)
+
+g1 = ggplot(data=pinkPWS, aes(b0, diff,color=Year)) + geom_point() + stat_smooth(method=lm) + xlab("Estimated intercept from model") + ylab("Change in total pink salmon returns") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1
+```
+
+
+\break
 
 ## Trends in revenue and prices  
   
@@ -378,218 +609,7 @@ kable(d)
 ```{r echo=FALSE, eval=FALSE}
 #Z = read.table("../salmon/data-generated/granger_table_s01a.csv", header=TRUE)
 ```
-
-\break  
-
-## Model Results  
-
-```{r figa5, fig.pos="placeHere", fig.cap="Time varying effects of increasing the effective species diversity of catch from 1 to 2 species, on log standard deviation of revenue.", echo=FALSE}
-
-diffdat = readRDS(file="../data-generated/salmon.rds")
-years = seq(min(diffdat$year), max(diffdat$year))
-permits = levels(as.factor(diffdat$permit))
-# note that we have to use factor() here instead of unique() because
-# that's the same as the ordering in the estimation code
-yearpermit = data.frame("yrpermit"=levels(as.factor(diffdat$year_permit)))
-yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
-yearpermit$permit = substr(yearpermit$yrpermit,6,9)
-yearpermitold=yearpermit
-
-# grab original data to look at permit names
-diffdat = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
-years = seq(min(diffdat$year), max(diffdat$year))
-#permits = levels(as.factor(diffdat$permit))
-
-load("../analysis/model-linear-iid.Rdata")
-yearpermit=yearpermitold
-
-est = rstan::extract(mod, permute="TRUE")
-
-# start with making time series of estimates on mean
-# challenge is that they're time varying quadratic functions
-# do facet_wrap of estimates by year
-
-# effect of adding more 1 species from 1. specdiv.prev = 1
-
-specdiv.prev = seq(1, 5, by=0.1)
-specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
-x1 = log(specdiv/specdiv.prev)
-x2 = log(specdiv/specdiv.prev) * specdiv.prev
-x3 = log(specdiv/specdiv.prev) * specdiv.prev^2
-
-df = expand.grid("year"=1:length(years), "diversity" = seq(1,length(x1)), "permit"=1:6)
-df$permits = permits[df$permit]
-df$years = years[df$year]
-df$x = specdiv.prev[df$diversity]
-df$pred = 0
-df$low = 0
-df$high = 0
-
-df$permits[which(df$permits=="S01A")] = "SE-seine"
-df$permits[which(df$permits=="S01E")] = "PWS-seine"
-df$permits[which(df$permits=="S01K")] = "KO-seine"
-df$permits[which(df$permits=="S01M")] = "AP-seine"
-df$permits[which(df$permits=="S03A")] = "SE-gillnet"
-df$permits[which(df$permits=="S03E")] = "PWS-gillnet"
-
-for(i in 1:nrow(df)) {
-  #tmp = est$g0 + est$g0_strategy[,df$permit[i]] + 
-  tmp = 
-    x1[df$diversity[i]] * (est$g_1[,df$year[i], df$permit[i]])# +
-    #x2[df$diversity[i]] * (est$g_2[,df$year[i], df$permit[i]]+est$g2_str_yr_mu)
-  df$pred[i] = median(tmp)
-  df$low[i] = quantile(tmp,0.025)
-  df$high[i] = quantile(tmp,0.975)
-}
-
-g1 = ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
-  geom_line() +
-  geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
-  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal benefit") + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-g1
-``` 
-
-```{r figa6, echo=FALSE, fig.pos="placeHere", fig.cap="Time varying intercepts on estimated mean revenue, by permit. These are interpreted as the mean change in revenue for each permit holder in each year (positive equates to increasing revenue, etc), after accounting for effects of catch diversification and days fished."}
-# grab original data to look at permit names
-diffdat = readRDS(file="../data-generated/salmon.rds")
-
-years = seq(min(diffdat$year), max(diffdat$year))
-permits = levels(as.factor(diffdat$permit))
-
-# note that we have to use factor() here instead of unique() because
-# that's the same as the ordering in the estimation code
-yearpermit = data.frame("yrpermit"=levels(as.factor(diffdat$year_permit)))
-yearpermit$year = as.numeric(substr(yearpermit$yrpermit,1,4))
-yearpermit$permit = substr(yearpermit$yrpermit,6,9)
-
-yearpermitold=yearpermit
-load("../analysis/model-linear-iid.Rdata")
-yearpermit=yearpermitold
-est = rstan::extract(mod, permute="TRUE")
-
-yearpermit$b0 = apply(est$b0_str_yr,2,median)
-yearpermit$b0_low = apply(est$b0_str_yr,2,quantile,0.025)
-yearpermit$b0_hi = apply(est$b0_str_yr,2,quantile,0.975)
-
-yearpermit2 = yearpermit
-yearpermit2$permit[which(yearpermit2$permit=="S01A")] = "SE-seine"
-yearpermit2$permit[which(yearpermit2$permit=="S01E")] = "PWS-seine"
-yearpermit2$permit[which(yearpermit2$permit=="S01K")] = "KO-seine"
-yearpermit2$permit[which(yearpermit2$permit=="S01M")] = "AP-seine"
-yearpermit2$permit[which(yearpermit2$permit=="S03A")] = "SE-gillnet"
-yearpermit2$permit[which(yearpermit2$permit=="S03E")] = "PWS-gillnet"
-
-g1 = ggplot(data=yearpermit2) + 
-  geom_ribbon(aes(x=year,ymin=b0_low,ymax=b0_hi),alpha=0.3) +
-  geom_line(aes(x=year,y=b0)) + 
-  facet_wrap(~permit) + xlab("Year") + 
-  ylab("Intercepts on mean") + 
-  geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-g1
-```
-
-```{r figa7, eval=FALSE,echo=FALSE}
-load("../analysis/cv-model-simple.Rdata")
-# groups here are 80% pink vs 97% pink
-
-yrs = 1986:2014
-
-hist(rstan::extract(mod)[["g_offset"]], 40, col="grey", xlab="Effect of specializing on pink (sd)")
-
-xx = exp(rstan::extract(mod)[["sd_yr"]])
-df.gen = data.frame("year"=yrs, "mean" = apply(xx, 2, mean), "low" = apply(xx, 2, quantile, 0.025),
-  "hi" = apply(xx, 2, quantile, 0.975), "strategy"="pink:chum")
-
-offset = matrix(rstan::extract(mod)[["g_offset"]],ncol=1) %*% matrix(rep(1,length(yrs)), nrow=1)
-xx = exp(extract(mod)[["sd_yr"]] + offset)
-df.spec = data.frame("year"=yrs, "mean" = apply(xx, 2, mean), "low" = apply(xx, 2, quantile, 0.025),
-  "hi" = apply(xx, 2, quantile, 0.975), "strategy"="pink")
-
-g1 = ggplot(data=rbind(df.gen,df.spec), aes(year, mean, group=strategy, fill=strategy)) + geom_ribbon(aes(ymin=low,ymax=hi), alpha=0.5) + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-g1
-```
-
-```{r, echo=FALSE, fig.pos="placeHere", fig.cap = "Change in natural log of landed weight versus change in effective species diversity, by permit. Decreases in landed weight is often accompanied by reduced catch diversity."}
-diffdat = readRDS(file="../data-generated/salmon.rds")
-diffdat = filter(diffdat, !is.na(days.change))
-
-g1 = ggplot(diffdat, aes(log(weight)-log(weight.prev), specDiv.change)) + geom_point(alpha=0.15, col="blue", size=0.4) + facet_wrap(~ strategy_permit) + xlab("Change in ln annual landed weight") + ylab("Change in effective species diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-g1
-```
-
-
-```{r figa8, echo=FALSE, eval=FALSE}
-# fig.pos="placeHere", fig.cap="Time varying effects of adding 1 species on revenue (measured in ln dollars) for purse seine permit in Prince William Sound (S01E). This figure illustrates two things: (1) the benefit of adding more species diminishes as a function of past diversity, and (2) the economic benefit to adding more species has been reduced through time."
-# grab original data to look at permit names
-diffdat = readRDS(file="../data-generated/salmon.rds")
-years = seq(min(diffdat$year), max(diffdat$year))
-#permits = levels(as.factor(diffdat$permit))
-
-load("../analysis/model-linear-iid.Rdata")
-yearpermit=yearpermitold
-
-est = extract(mod, permute="TRUE")
-
-# start with making time series of estimates on mean
-# challenge is that they're time varying quadratic functions
-# do facet_wrap of estimates by year
-
-# effect of adding more 1 species from 1. specdiv.prev = 1
-
-specdiv.prev = seq(1, 5, by=0.1)
-specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
-x1 = log(specdiv/specdiv.prev)
-x2 = log(specdiv/specdiv.prev) * specdiv.prev
-
-df = expand.grid("year"=1:29, "diversity" = seq(1,length(x1)), "permit"=1:6)
-df$permits = permits[df$permit]
-df$years = years[df$year]
-df$x = specdiv.prev[df$diversity]
-df$pred = 0
-df$low = 0
-df$high = 0
-b0_indx = match(paste(as.character(df$years), as.character(df$permits)), as.character(yearpermit$yrpermit)) 
-
-for(i in 1:nrow(df)) {
-  tmp = x1[df$diversity[i]] * (est$b_1[,df$year[i], df$permit[i]])# + x2[df$diversity[i]] * (est$b_2[,df$year[i], df$permit[i]]+est$b2_str_yr_mu)
-  df$pred[i] = median(tmp)
-  df$low[i] = quantile(tmp,0.025)
-  df$high[i] = quantile(tmp,0.975)
-}
-df_s01e_b1 = df
-#ggplot(df[df$permits=="S01E",], aes(x=x,y=pred,group=years)) +
-#  #geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
-#  geom_line() +
-#  facet_wrap(~years) + xlab("Previous species diversity") + ylab("Predicted #benefit of adding +1 spp (ln $)")
-
-```
-
-
-```{r figa9, echo=FALSE, fig.pos="placeHere", fig.cap = "As model validation, we can compare the estimated intercepts for PWS S01E (purse seine) representing average year to year change in revenue versus the change year over year in ln(pink salmon returns). Correlation between them is ~ 0.8. This suggests (as expected) people on average make a lot more money in years when pink salmon returns are high. [EW side note: diversification may only be beneficial here when returns and prices are both low.]"}
-
-yearpermit$b0 = apply(est$b0_str_yr,2,median)
-yearpermit$b0_low = apply(est$b0_str_yr,2,quantile,0.025)
-yearpermit$b0_hi = apply(est$b0_str_yr,2,quantile,0.975)
-
-S01E = yearpermit[yearpermit$permit=="S01E",]
-names(S01E)[which(names(S01E)=="year")]="Year"
-
-returns = readxl::read_excel("../paper/salmon_returns_PWS.xlsx")
-pinkPWS = returns[,c("Year", "Pink_total", "Chum_total")]
-pinkPWS = pinkPWS[which(pinkPWS$Year >= 1975),]
-pinkPWS$diff = c(NA, diff(log(pinkPWS$Pink_total)))
-
-pinkPWS = dplyr::left_join(pinkPWS, S01E)
-
-g1 = ggplot(data=pinkPWS, aes(b0, diff,color=Year)) + geom_point() + stat_smooth(method=lm) + xlab("Estimated intercept from model") + ylab("Change in total pink salmon returns") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-g1
-```
-
+  
 \break  
 
 ### Season length  

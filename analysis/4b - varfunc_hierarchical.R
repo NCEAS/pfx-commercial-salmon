@@ -5,7 +5,7 @@ library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-dat = read.csv("salmon/data-generated/commonPropertyCommercialCatch.csv")
+dat = read.csv("data-generated/commonPropertyCommercialCatch.csv")
 dat = dplyr::rename(dat, year=Year, region=Region)
 
 harvest <- melt(dat[,c("year","region","Chinook_harvest","Sockeye_harvest",

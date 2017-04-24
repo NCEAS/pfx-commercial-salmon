@@ -78,7 +78,7 @@ mod = stan(file="salmon/analysis/hatchery_var_hier.stan", data = list("N"=N,"M"=
     "fishery"=fishery, "fishery_species"=fishery_species,
   "yprev2"=hatch$prev_catch2, "prev_pct_hatchery"=hatch$prev_pcthatch),
     pars = c("sigma0","sigma0","sigma1","musigma1","sigsigma1","b1","mub1","sigb1","pred", "log_lik","effect_sig","phi"),
-    iter=1000, chains=3, thin=1)
+    warmup = 4000, iter=9000, chains=3, thin=1)
 
 saveRDS(mod, file=paste0("salmon/data-generated/",model_name,"_agg.rds"))
 

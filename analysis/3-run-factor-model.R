@@ -64,7 +64,7 @@ options(mc.cores = parallel::detectCores())
 
 # estimate model. This model is modified from the simulation model by (1) including indices to allow NAs in the inputted data, and (2) including estimated year effects (intercepts)
 mod = stan(file = 'salmon/analysis/portfolio-offset-simple.stan',data = stan_data,
-  verbose = TRUE, chains = 3, thin = 1, warmup = 1000, iter = 2000, pars = stan_pars)
+  verbose = TRUE, chains = 3, thin = 1, warmup = 4000, iter = 9000, pars = stan_pars)
 
 save.image("salmon/analysis/cv-model-simple.Rdata")
 
