@@ -423,7 +423,7 @@ for(i in 1:nrow(df)) {
 g1 = ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
   geom_line() +
   geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
-  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal benefit") + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal effect") + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
 panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 g1
 ``` 
