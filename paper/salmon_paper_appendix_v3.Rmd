@@ -69,6 +69,19 @@ cfec = readRDS("../data-generated/salmon_data_for_paper.rds")
 cfec = cfec[cfec$p_fshy%in%c("S 01A", "S 01E", "S 01K", "S 03A", "S 03E", "S 01M"),]
 cfec$year = as.numeric(substr(cfec$landdate, 1, 4))
 
+# count processors
+raw_proc = group_by(cfec[cfec$year!=0,], p_fshy, year) %>% 
+  summarize(n= length(unique(procid))) %>% 
+  ggplot(aes(year, n)) + geom_line() + facet_wrap(~p_fshy)
+simp.div = function(x) {
+  1/sum((x/sum(x))^2)
+}
+proc = group_by(cfec[cfec$year!=0,], p_fshy, year, procid) %>%
+  summarize(g = sum(g_earn))
+proc_div = group_by(proc, p_fshy, year) %>% 
+  summarize(div = simp.div(g)) %>%
+  ggplot(aes(year, div)) + geom_line() + facet_wrap(~p_fshy)
+
 # only use people who are using just that permit - diversification within permit
 cfec.raw = cfec
 dat.salmon = dat.diff[dat.diff$strategy_permit%in%c("S01A", "S01E", "S01K", "S03A", "S03E","S01M"),]
