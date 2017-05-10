@@ -34,6 +34,7 @@ ggplot(d, aes(Year, 1/div_enhanced)) +
   geom_point(aes(Year, 1/div), color="grey")
 
 cfec = readRDS("data-generated/salmon_data_for_paper.rds")
+
 # only use data from these 6 fisheries
 cfec = cfec[cfec$p_fshy%in%c("S 01A", "S 01E", "S 01K", "S 03A", "S 03E", "S 01M"),]
 cfec$year = as.numeric(substr(cfec$landdate, 1, 4))

@@ -7,8 +7,8 @@ library(ggplot2)
 
 d = filter(d, Species %in% c("CHINOOK","COHO","PINK","CHUM","SOCKEYE"))
 
-d = d[-which(is.na(d$Release.Total)),]
-d = d[-which(is.na(d$Site.Region)),]
+#d = d[-which(is.na(d$Release.Total)),]
+#d = d[-which(is.na(d$Site.Region)),]
 
 s = group_by(d, Species, Year.Released, Region.Released) %>%
   summarize(tot_by_spec = sum(Total.Released)) %>%
@@ -25,6 +25,11 @@ s$Region[which(s$Region=="4")] = "Kodiak"
 
 div = group_by(s, Region, Year.Released) %>%
   summarize(div = sum(p_by_spec^2)) %>%
-  ggplot(aes(Year.Released, div)) + facet_wrap(~Region) + geom_line() + xlab("Year released") + ylab("Diversity")
+  ggplot(aes(Year.Released, div)) +
+  facet_wrap(~Region, scale="free_y") +
+  geom_line() +
+  xlab("Year released") + ylab("Diversity of releases")
 
-
+pdf("figs/diversity_of_releases.pdf")
+div
+dev.off()
