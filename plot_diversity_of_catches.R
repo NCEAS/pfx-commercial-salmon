@@ -81,12 +81,12 @@ div = group_by(s[which(s$year > 0),], year, region) %>%
     wild_div = simp.div(g*(1-value)),
     p = sum(g*value) / sum(g))
 
-
 ggplot(div) +
   facet_wrap(~region) +
   geom_line(aes(year, hatch_div), color="red") +
   geom_line(aes(year, wild_div), color="blue") +
-  geom_line(aes(year, tot_div), color="purple")
+  geom_line(aes(year, tot_div), color="purple") +
+  ylab("Diversity")
 
 ggplot(div, aes(year, p)) +
   facet_wrap(~region) +
