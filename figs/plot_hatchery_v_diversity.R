@@ -1,5 +1,6 @@
 library(ggplot2)
 library(ggsidekick)
+library(viridis)
 
 d = readRDS("data-generated/hatchery_diversity.rds")
 
