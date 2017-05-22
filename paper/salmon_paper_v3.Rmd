@@ -10,6 +10,7 @@ output:
   html_document: default
   word_document: default
 bibliography: CatchPortfolios_salmon.bib
+csl: journal-of-applied-ecology.csl
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -80,30 +81,27 @@ The second component of this regression model involved relating the variability 
 
 ### Relationships between hatchery production, diversity and revenue
   
-To quantify potential effects between hatchery runs and diveristy, we used data from the seine and gillnet fisheries in Prince William Sound and Southeast Alaska to correlate catch diversity (Figs. A3-A4) with hatchery returns (Fig. 3). In Southeast Alaska, we correlated catch diversity with the size of the hatchery chum returns, because chum are caught by both seine and gillnet fisheries (Figs. A3-A4). For Prince William Sound, we calculated the catch diversity of the seine fishery with hatchery returns of pink salmon (Fig. A3) and the catch diversity of the gillnet fishery with hatchery returns of sockeye salmon (Fig. A4). 
+To quantify potential effects between hatchery runs and diveristy, we used data from the seine and gillnet fisheries in Prince William Sound and Southeast Alaska to correlate catch diversity (Figs. A3-A4) with hatchery returns of dominant species (Fig. 1). In Southeast Alaska, we correlated catch diversity with the size of the hatchery chum returns, because chum are caught by both seine and gillnet fisheries (Figs. A3-A4). For Prince William Sound, we calculated the catch diversity of the seine fishery with hatchery returns of pink salmon (Fig. A3) and the catch diversity of the gillnet fishery with hatchery returns of sockeye salmon (Fig. A4). 
 
-To quantify relationships between hatchery production and revenue or revenue stability (variance), we using catch (weight of salmon landed) as a response [@amoroso2017; @hilborn2001a; @knapp2007]. Using the a variance function regression approach, we extended the work of [@amoroso2017] to model variability in salmon catches as a function of the hatchery contribution. Within each region (Prince William Sound, Southeast, Kodiak, Alaska Peninsula), the hatchery contribution and total harvest are recorded by year for each species [@stopha2016] (Fig. 3), with Kodiak and the Alaska Peninsula grouped into a single region because of reporting. 
-
-The catch of each species in each region was modeled as, $$E[{ Y }_{ s,f,t }]={ Y }_{ s,f,t-1 }+{ b }_{ s,f }{ X }_{ s,f,t }$$ where ${ Y }_{ s,f,t-1 }$ is the catch of species $s$ in region $f$ in the previous time step $t-1$, ${ b }_{ s,f }$ is a coefficient relating the contribution of hatchery fish to the mean catch, and ${ X }_{ s,f,t }$ is the change in proportion of hatchery contribution to the total catch for species *s* between times *t* and *t-1*. Catches in the previous year were included as an offset because these time series are not stationary (Fig. 3), making this approach similar to a model of first-differenced data. Because of this interpretation, we used the difference in hatchery contribution, rather than raw values, as the predictor. The hatchery-effect coefficients were modeled hierarchically, and we assumed that ${ b }_{ s,f }\sim \mathrm{Normal}\left( { u }_{ b },{ \sigma  }_{ b } \right)$, where ${ u }_{ b }$ and ${ \sigma  }_{ b }$ represent the location and scale hyperparameters.
-
-To incorporate potential hatchery effects in the variability of salmon catches, the second component of our model included a hierarchical model on the process variance terms, $$log\left( { \sigma  }_{ s,f,t } \right) ={ g  }_{ 0,s,f }+{ g  }_{ 1,s,f }{ X }_{ s,f,t }$$ where ${ g  }_{ 0,s,f }$ represents an estimated intercept unique to each region and species, and ${ g  }_{ 1,s,f }$ represents a region- and species-specific slope. The covariate ${ X }_{ s,f,t }$ is identical to that used in the mean model. We included the intercepts ${ g  }_{ 0,s,f }$ as fixed effects (representing differences by species) and again modeled the hatchery effect as hierarchical, ${ g }_{ 1,s,f }\sim \mathrm{Normal}\left( { u }_{ g },{ \sigma  }_{ g } \right)$. The observed data were log-transformed and linked to the predicted mean and standard deviation with a normal likelihood, $ln\left( { Y }_{ s,f,t } \right) \sim \mathrm{Normal}\left( E\left[ ln\left( { Y }_{ s,f,t } \right)  \right] ,{ \sigma  }_{ s,f,t } \right)$. Previous authors, such as [@amoroso2017] have also considered the impacts of hatchery fish on variability in catches, but have examined changes in variability between two time periods, rather than modeled the variability continuously as we have here.
-
-We focused our inference on the slopes of the fraction of hatchery contribution to the mean and standard deviation of estimated annual catches, ${ b }_{ s,f }$ and ${ g }_{ 1,s,f }$. To allow for comparison across regions and scales of data, we converted these estimates to effect sizes, by calculating the approximate percent change in standard deviation resulting from the hatchery contribution increasing by 20%, ${ \kappa  }_{ s }=ln\left( \frac { { g }_{ 0,s }+{ 0.2 \cdot g }_{ 1,s } }{ { g }_{ 0,s } }  \right)$. 
+To quantify relationships between hatchery production and revenue or revenue stability (variance), we used the landed catch from each region and species as a response [@amoroso2017; @hilborn2001a; @knapp2007]. Using a variance function regression model, we extendeded the approach of [@amoroso2017] to model variability in salmon catches as a function of the hatchery contribution. Within each region (Prince William Sound, Southeast, Kodiak, Alaska Peninsula), the hatchery contribution and total harvest are recorded by year for each species [@stopha2016] (Fig. 1), with Kodiak and the Alaska Peninsula grouped into a single region because of reporting. The catch of each species in each region was modeled as, $$E[{ Y }_{ s,f,t }]={ Y }_{ s,f,t-1 }+{ b }_{ s,f }{ X }_{ s,f,t }$$ where ${ Y }_{ s,f,t-1 }$ is the catch of species $s$ in region $f$ in the previous time step $t-1$, ${ b }_{ s,f }$ is a coefficient relating the contribution of hatchery fish to the mean catch, and ${ X }_{ s,f,t }$ is the change in proportion of hatchery contribution to the total catch for species *s* between times *t* and *t-1*. The hatchery-effect coefficients were modeled hierarchically, so ${ b }_{ s,f }\sim \mathrm{Normal}\left( { u }_{ b },{ \sigma  }_{ b } \right)$, where ${ u }_{ b }$ and ${ \sigma  }_{ b }$ represent the mean and variance of the random effects. Our second equation relates the change in proportion of hatchery contribution to the catch variability, $$log\left( { \sigma  }_{ s,f,t } \right) ={ g  }_{ 0,s,f }+{ g  }_{ 1,s,f }{ X }_{ s,f,t }$$ where ${ g  }_{ 0,s,f }$ represents an intercept unique to each region and species, and ${ g  }_{ 1,s,f }$ represents a region- and species-specific slope, ${ g }_{ 1,s,f }\sim \mathrm{Normal}\left( { u }_{ g },{ \sigma  }_{ g } \right)$. Combining the regression of the mean and variance, the observed catches were assumed to be normal $ln\left( { Y }_{ s,f,t } \right) \sim \mathrm{Normal}\left( E\left[ ln\left( { Y }_{ s,f,t } \right)  \right] ,{ \sigma  }_{ s,f,t } \right)$.
 
 ### Estimation  
 
-Estimation for both sets of models was done in a Bayesian framework using R [@rcoreteam2016] and the package `rstan`, implementing Markov chain Monte Carlo (MCMC) using the No-U Turn Sampling (NUTS) algorithm [@hoffman2014; @standevelopmentteam2015; @standevelopmentteam2015a]. Runs for each model included 3-4 MCMC chains, with a burn-in (warmup) period of 4000 samples, followed by 5000 iterations. Code to replicate our analysis, including additional diagnostics plots, and additional models is available at [https://github.com/NCEAS/pfx-commercial-salmon].
+Estimation for both sets of models was done in a Bayesian framework using R [@rcoreteam2017] and the package `rstan` [@standevelopmentteam2016], implementing Markov chain Monte Carlo (MCMC) using the No-U Turn Sampling (NUTS) algorithm [@hoffman2014; @standevelopmentteam2015; @standevelopmentteam2015a]. Runs for each model included 3-4 MCMC chains, with a warmup period of 4000 samples, followed by 5000 iterations. Code to replicate our analysis, including additional diagnostics plots, and additional models is available at [https://github.com/NCEAS/pfx-commercial-salmon].
 
 ## Results
 
-General trends in limited-entry salmon fisheries since the early 2000s are that more individuals have been participating, landings are increasing, revenue is increasing slightly, and effective species diversity is declining over time (Fig. 1; Figs. A1-A4). Across salmon fisheries, there appears to be little correlation between catch diversity and revenue (Fig. A2), though fisheries cluster similarly by gear on axes of risk (CV of annual revenue) and return  (mean annual revenue, Fig. 2). 
+Since the early 2000s, general trends in Alaskan salmon fisheries are that more individuals have been participating, landings have increased (more rapidly than revenue), and species diversity of landed catch has declined over time (Fig. 2; Figs. A1-A4). Across salmon fisheries, there appears to be little correlation between catch diversity and revenue (Fig. A2), though fisheries cluster similarly by gear on axes of risk (CV of annual revenue) and return (mean annual revenue, Fig. 3). 
+
+Most fishers participating in the six salmon fisheries in our analysis experience changes in effective catch diversity that are typically between +/- 1 (Fig. A5). Our model of individual revenues and revenue variability suggests that diversity in these six fisheries have declined over time (Figs. A3--A4), and higher revenue has been increasingly associated with increased specialization (Fig. 4). The negative estimated effects on mean revenue of increasing diversity implies that for the majority of these fisheries in most years, revenue increases when individuals specialize, rather than diversify. The slight negative trends in these estimated effects for some fisheries (PWS and SEAK drift gillnet) suggest that the benefits of specializing on revenue have also increased over time (Fig. 4). More importantly, our estimates suggest that individuals experience rapidly changing incentives to diversify over time. From 2008--2010 for example, it was not beneficial for individuals in the PWS or SE seine fisheries to diversify (negative effects in Fig. 4), but several years later these trends changed slightly positive for seine fisheries, indiciating a more diverse catch translated into higher revenue (Fig. 4). 
+
+Our results also showed contrasts in year-to-year variability between seine and gillnet fisheries, with individuals in seine fisheries experiencing higher annual variability in revenue (Figs. 3, A6). These results are expected, because across individual fishers, seine fisheres are generally higher on axes of risk and return (CV of annual revenue versus mean annual revenue; Fig. 3). Though the catch composition of each of these fisheries has fluctuated through time, in areas where seine and gillnet fisheries exist (Prince William Sound, Southeast Alaska), effective catch diversity is slightly higher in gillnet fisheries (Figs A3--A4). We found little evidence that individuals who increased catch diversity reduced their variability in revenue for most fisheries (Fig. A7). For several fisheries (SE seine and gillnet, PWS seine), there have been periods over the last several decades where diversification has increased variability, such as the mid-2000s (Fig. A7). For most other fisheries, these effects of diversifying are near zero or slightly positive (Fig. A7). Since 2010 for example, the effects of increasing catch diversity have translated to an increase in revenue variability for individuals participating in fisheries in PWS or the SE seine fishery (Fig. A7).
+
+
+
 Across species and regions we found no consistent support for the hypothesis that variability in salmon catches has been stabilized by increased hatchery production. Across fisheries in the four regions in our analysis, most estimates of hatchery production on changes in the mean total catch are near zero (Fig. 4). One exception is a slight negative estimated effect of hatcheries on Chinook catches in Southeast Alaska, though this effect may be spurious - particularly if other unmodeled factors changed at the same time. The strongest positive correlations between hatchery contribution and variability in catches appeared to be for coho and pink salmon in PWS (Fig. 4). The 95% credible intervals for these estimates overlap zero however, and the estimated effect sizes are small in magnitude (a 20% increase in hatchery fish results in < 20% increase in the standard deviation of catches).
 
-Most fishers participating in the six salmon fisheries in our analysis experience changes in effective catch diversity that are typically between +/- 1 (Fig. A5). Our model of individual revenues and revenue variability suggests that diversity in these six fisheries have declined over time (Figs. A3--A4), and higher revenue has been increasingly associated with increased specialization (Fig. 5). The negative estimated effects on mean revenue of increasing diversity implies that for the majority of these fisheries in most years, revenue increases when individuals specialize, rather than diversify. The slight negative trends in these estimated effects for some fisheries (PWS and SEAK drift gillnet) suggest that the benefits of specializing on revenue have also increased over time (Fig. 5). More importantly, our estimates suggest that individuals experience rapidly changing incentives to diversify over time. From 2008--2010 for example, it was not beneficial for individuals in the PWS or SE seine fisheries to diversify (negative effects in Fig. 5), but several years later these trends changed slightly positive for seine fisheries, indiciating a more diverse catch translated into higher revenue (Fig. 5). [Note: worth doing comparison of even-odd years? EW: Difficult because dominance not strong 2-year cycle]
-
-Our results also showed contrasts in year-to-year variability between seine and gillnet fisheries, with individuals in seine fisheries experiencing higher annual variability in revenue (Figs. 2, A6). These results are expected, because across individual fishers, seine fisheres are generally higher on axes of risk and return (CV of annual revenue, mean annual revenue; Fig. 2). Though the catch composition of each of these fisheries has fluctuated through time, in areas where seine and gillnet fisheries exist (Prince William Sound, Southeast Alaska), effective catch diversity is slightly higher in gillnet fisheries (Figs A3--A4).  
-
-We found little evidence that individuals who increased catch diversity reduced their variability in revenue for most fisheries (Fig. A7). For several fisheries (SE seine and gillnet, PWS seine), there have been periods over the last several decades where diversification has increased variability, such as the mid-2000s (Fig. A7). For most other fisheries, these effects of diversifying are near zero or slightly positive (Fig. A7). Since 2010 for example, the effects of increasing catch diversity have translated to an increase in revenue variability for individuals participating in fisheries in PWS or the SE seine fishery (Fig. A7).
+We focused our inference on the slopes of the fraction of hatchery contribution to the mean and standard deviation of estimated annual catches, ${ b }_{ s,f }$ and ${ g }_{ 1,s,f }$. To allow for comparison across regions and scales of data, we converted these estimates to effect sizes, by calculating the approximate percent change in standard deviation resulting from the hatchery contribution increasing by 20%, ${ \kappa  }_{ s }=ln\left( \frac { { g }_{ 0,s }+{ 0.2 \cdot g }_{ 1,s } }{ { g }_{ 0,s } }  \right)$. 
 
 ## Discussion
 
@@ -111,11 +109,12 @@ Understanding the mechanisms responsible for trends or variability in the revenu
 
 As in other commercial fisheries, the ability of salmon fishers to diversify within the constraints of their permits may be largely driven by factors beyond their control. The limited options of salmon fishers in Alaska to diversify may include fishing in different months or different regions. For example, individuals participating in the Prince William Sound seine fishery may fish earlier in the year to target chum salmon. External incentives for salmon fishers to specialize or diversify are complex, and include a suite of economic factors: competition from foreign markets, prices from processors, fuel costs, and marketing (e.g. increased marketing of Copper River sockeye salmon beginning in the early 1980s) [@knapp_trends]. A potential driver unique to Alaska salmon fisheries is the potential impacts of hatchery salmon. Increased hatchery production may alter the species composition that individual fishers encounter, as well as the prices set by processors. [Note: expand on this last sentence]
 
-Results from our variance function model of individual revenues over the period 1975--2016 suggest that there have been long-term increases in the benefits of individual fishers specializing (i.e., expected revenue increases when catch diversity decreases; Fig. 5). For most of the time series, the impacts of changes to catch diversity on variability in year-to-year revenue are less clear. A counter-intuitive result is that since the mid-2000s, fisheries in Prince William Sound and seine fisheries in Southeast Alaska have had an estimated increase in revenue variability associated with diversification. Some of this relationship may be spurious, in that individuals who have large reductions in catch diversity may harvest less (Fig. A8). Mechanisms responsible for reduced harvest may include illness or gear / vessel malfunctions. But another driver may be increased consolidation from processors. Prices of all salmon have generally increased since the early 2000s, with some of the largest changes being in pink and chum salmon prices. In areas with high pink or chum salmon runs, the benefits of diversification may have been greatest when these species had low returns. For pink salmon returns with strong 2-year oscillations for example, this would correspond to even- versus odd-years.
+Results from our variance function model of individual revenues over the period 1975--2016 suggest that there have been long-term increases in the benefits of individual fishers specializing (i.e., expected revenue increases when catch diversity decreases; Fig. 4). For most of the time series, the impacts of changes to catch diversity on variability in year-to-year revenue are less clear. A counter-intuitive result is that since the mid-2000s, fisheries in Prince William Sound and seine fisheries in Southeast Alaska have had an estimated increase in revenue variability associated with diversification. Some of this relationship may be spurious, in that individuals who have large reductions in catch diversity may harvest less (Fig. A8). Mechanisms responsible for reduced harvest may include illness or gear / vessel malfunctions. But another driver may be increased consolidation from processors. Prices of all salmon have generally increased since the early 2000s, with some of the largest changes being in pink and chum salmon prices. In areas with high pink or chum salmon runs, the benefits of diversification may have been greatest when these species had low returns. For pink salmon returns with strong 2-year oscillations for example, this would correspond to even- versus odd-years.
 
 An additional potential impact of increased hatchery production may be changes in the variability of catches or revenues, to fisheries or individuals. Across multiple regions in Alaska, we found little support for catches becoming more stable as hatchery programs have increased. One example of a positive correlation between the hatchery contribution to harvest and variability is pink salmon in Prince William Sound (Fig. 4). Our model describing the revenues of individual fishers also suggests that individuals in the Prince William Sound seine fishery have higher year-to-year variability relative to other fisheries (Fig. A6), with year to year changes being correlated with fluctuations in pink salmon returns (Fig. A9).
 
 The increased specialization of Alaska fisheries has been highlighted in several recent analyses [@kasperski2013; @anderson_benefits; @sethi2012], and our analysis extends this work to show similar trends within individual Alaskan salmon fisheries. In terrestrial agriculture, there are multiple examples of year-to-year income variability being stabilized by diversification [@difalco2003], but these incentives become more complex at larger scales. Crop diversification in developed countries is shaped by a number of drivers including changing national policies, technology, and increased demand from other parts of the world (e.g. U.S. production of soybeans for Asian countries) [@bradshaw2004; @aguilar2015]. Shifts in terrestrial agriculture from a diverse mix of low- and high-value crops to focusing on high-volume low-value crops (such as soybeans or cereals) may have parallels for Alaskan salmon fisheries -- particularly those fisheries that have more recently targeted low-value species with rapid life histories (pink, chum salmon). 
+
 Increasing trends toward specialization in Alaska salmon fisheries may be acceptable for fishers if individuals are willing to accept the additional risk that may accompany larger revenues, particularly when prices and abundances are high. Variability in the revenues that individuals or communities experience is product of many complex drivers, including management, market forces, and environmental variation. While reducing risks to individual fisher revenues is not something that can currently be managed for, understanding patterns of variability that individuals experience is essential for quantifying changing revenue patterns at higher levels of fisheries and coastal communities, and protecting individuals from future economic shocks. 
 
 [Note: AB: things to add to discussion:	Diversification beyond salmon fisheries (in other words, salmon isn’t the whole portfolio)
@@ -125,146 +124,8 @@ Any other studies that might support results for hatchery effect on catch
 [Note: AH: Seems like something to add is that as the value of single permits increase, the cost of adding another would increase.  So that specialization is likely to be self-reinforcing.   This might be a point more for Sean’s paper really, but seems like it applies here too.]
 
 \break  
-
-```{r fig1, echo=FALSE, fig.pos="placeHere", fig.cap="Trends in participation, landed catch, mean annual revenue, and effective species diversity for eight selected Alaska salmon fisheries. The troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska."}
-# trends in participation, 
-cfec_all = readRDS("../data-generated/salmon_data_for_paper.rds")
-people = group_by(cfec_all, p_fshy, year) %>% 
-  summarize(n = length(unique(p_holder))) %>% 
-  filter(substr(p_fshy,1,1)=="S")
-people$p_fshy = paste0(substr(people$p_fshy,1,1), substr(people$p_fshy,3,5))
-names(people)[which(names(people)=="p_fshy")]="Permit"
-
-people2 = people[people$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
-people2$Permit[which(people2$Permit=="S01K")] = "KO-seine"
-people2$Permit[which(people2$Permit=="S01M")] = "AP-seine"
-people2$Permit[which(people2$Permit=="S01E")] = "PWS-seine"
-people2$Permit[which(people2$Permit=="S01A")] = "SE-seine"
-people2$Permit[which(people2$Permit=="S03A")] = "SE-drift"
-people2$Permit[which(people2$Permit=="S03E")] = "PWS-drift"
-people2$Permit[which(people2$Permit=="S03T")] = "BB-drift"
-people2$Permit[which(people2$Permit=="S05B")] = "State-troll"
-
-people2 = rename(people2, permit = Permit)
-people2 = rename(people2, value = n)
-people2$value = log10(people2$value)
-people2$datatype = "log10 (permit holders)"
-
-# trends in landed weight - metric tons
-weight = group_by(cfec_all, p_fshy, year) %>% 
-  summarize(w = sum(g_pounds,na.rm=T) * 0.000453592) %>% 
-  filter(substr(p_fshy,1,1)=="S")
-weight$p_fshy = paste0(substr(weight$p_fshy,1,1), substr(weight$p_fshy,3,5))
-names(weight)[which(names(weight)=="p_fshy")]="Permit"
-
-weight = left_join(weight, people)
-
-weight2 = weight[weight$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
-weight2$Permit[which(weight2$Permit=="S01K")] = "KO-seine"
-weight2$Permit[which(weight2$Permit=="S01M")] = "AP-seine"
-weight2$Permit[which(weight2$Permit=="S01E")] = "PWS-seine"
-weight2$Permit[which(weight2$Permit=="S01A")] = "SE-seine"
-weight2$Permit[which(weight2$Permit=="S03A")] = "SE-drift"
-weight2$Permit[which(weight2$Permit=="S03E")] = "PWS-drift"
-weight2$Permit[which(weight2$Permit=="S03T")] = "BB-drift"
-weight2$Permit[which(weight2$Permit=="S05B")] = "State-troll"
-
-weight2$wn = log10(weight2$w/weight2$n)
-weight2 = rename(weight2, permit=Permit, value = wn)
-weight2$datatype = "log10 (avg. mt)"
-datf = as.data.frame(rbind(people2[,c("permit","year","value","datatype")],
-  weight2[,c("permit","year","value","datatype")]))
-
-# trends in revenue
-dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
-dat.annual = group_by(dat.annual[which(dat.annual$strategy_permit %in% c("S01A", "S01E", "S01K", "S01M", "S03A", "S03E", "S03T", "S05B")),], year, strategy_permit) %>% 
-  summarize(meanrev = mean(revenue), meandiv = mean(specDiv))
-names(dat.annual)[which(names(dat.annual)=="strategy_permit")]="Permit"
-dat.annual = left_join(dat.annual, weight)
-
-dat.annual2 = dat.annual[dat.annual$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
-dat.annual2$Permit[which(dat.annual2$Permit=="S01K")] = "KO-seine"
-dat.annual2$Permit[which(dat.annual2$Permit=="S01M")] = "AP-seine"
-dat.annual2$Permit[which(dat.annual2$Permit=="S01E")] = "PWS-seine"
-dat.annual2$Permit[which(dat.annual2$Permit=="S01A")] = "SE-seine"
-dat.annual2$Permit[which(dat.annual2$Permit=="S03A")] = "SE-drift"
-dat.annual2$Permit[which(dat.annual2$Permit=="S03E")] = "PWS-drift"
-dat.annual2$Permit[which(dat.annual2$Permit=="S03T")] = "BB-drift"
-dat.annual2$Permit[which(dat.annual2$Permit=="S05B")] = "State-troll"
-
-dat.annual2 = rename(dat.annual2, permit=Permit)
-
-dat.annual2$meanrev = log10(dat.annual2$meanrev)
-tempd = as.data.frame(dat.annual2[,c("permit","year","meanrev")])
-names(tempd) = c("permit","year","value")
-tempd$datatype = "log10 (revenue)"
-datf = rbind(datf, tempd)
-
-tempd = as.data.frame(dat.annual2[,c("permit","year","meandiv")])
-names(tempd) = c("permit","year","value")
-tempd$datatype = "Catch diversity"
-datf = rbind(datf, tempd)
-
-datf = rename(datf, Permit = permit)
-
-datf$value[which(datf$year==1989 & datf$Permit == "KO-seine")] = NA
-
-ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + ylab("") + xlab("Year") + facet_wrap(~datatype, scale="free_y") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-
-```
   
-\break  
-
-<!-- TODO Sean: I guess we need to make sure we defined these regions either here or in a table -->
-```{r fig2, echo=FALSE, fig.pos="placeHere", fig.cap="CV and mean annual revenue by salmon permit, 1975--2016. Effective species diversity of catch is shown by circle area (effective species diversity = 1 / Simpson's diversity), and fishing gear type are shown with color shading. Labels indicate regions - the troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska.", warning=FALSE, message=FALSE}
-
-dat.annual <- read.table("../data-generated/bubble_plot_data_fig2.csv", stringsAsFactors = FALSE, header = TRUE)
-
-dat.annual <- mutate(dat.annual,
-  gear = factor(gear, levels = c("Drift gillnet", "Set gillnet", "Hand troll", "Power troll", "Purse seine")))
-
-l <- tibble::tribble(~let, ~label,
-  "H", "CI",
-  "E", "PWS",
-  "L", "CH",
-  "K", "KO",
-  "M", "AP",
-  "T", "BB",
-  "A", "SE",
-  "B", "State",
-  "Z", "NS",
-  "W", "KU",
-  "D", "YAK",
-  "Y", "YUK")
-
-dat.annual <- mutate(dat.annual,
-  let = sub("S[0-9]+([A-Z])", "\\1", dat.annual$strategy_permit)) %>%
-  left_join(l) %>%
-  filter(strategy_permit != "S04Y")
-
-g <- ggplot(dat.annual,
-  aes(x = mean_rev/1e3, y = cv_rev,
-    label = label)) +
-  geom_point(alpha = 0.5, aes(fill = gear, size = diversity), pch = 21,
-    colour = "grey20") +
-  scale_size(range = c(1.5, 15), breaks = seq(1.2, 2.4, 0.4)) +
-  guides(fill = guide_legend(override.aes = list(size = 4, alpha = 0.7), order = 1)) +
-  geom_text_repel(size = 2.6, colour = "grey20",
-    alpha = 1, segment.color = "grey70",
-    point.padding = unit(0, "lines"), max.iter = 1e4, segment.size = 0.3) +
-  scale_fill_brewer(palette = "Set3") +
-  ylab("CV annual revenue") + xlab("Mean revenue ($1000)") +
-  labs(fill = "Gear", size = "Diversity") +
-  scale_y_continuous(breaks = seq(0.2, 1, 0.2)) +
-  theme_sleek() #+
-  # scale_x_log10()
-print(g)
-```
-
-  
-\break  
-  
-```{r fig3, echo=FALSE, fig.pos="placeHere", fig.cap="Harvest of hatchery-produced salmon through time by species and area. Shown are the numbers of hatchery fish caught by fisheries (top row), and the hatchery contribution of each species to total catch (bottom row). Areas represents combined Kodiak and Alaska Peninsula ('KO - AP'), Southeast ('SE') and Prince William Sound ('PWS'). "}
+```{r fig1, echo=FALSE, fig.pos="placeHere", fig.cap="Harvest of hatchery-produced salmon through time by species and area. Shown are the numbers of hatchery fish caught by fisheries (top row), and the hatchery contribution of each species to total catch (bottom row). Areas represents combined Kodiak and Alaska Peninsula ('KO - AP'), Southeast ('SE') and Prince William Sound ('PWS'). "}
 
 seak_hatch = read.csv("../data-generated/seak_hatcheryHarvest.csv")
 pws_hatch = read.csv("../data-generated/pws_hatcheryHarvest.csv")
@@ -360,53 +221,147 @@ dat = left_join(dat, hatch)
 dat$total_harvest = dat$hatchery_harvest_millions / (dat$percent_hatchery/100)
 saveRDS(dat, file="../data-generated/hatchery_harvest_millions.rds")
 ```
-  
+
 \break  
 
-```{r fig4, echo=FALSE, fig.pos="placeHere", fig.cap="Effects of the fraction of hatchery fish on (1) mean annual catches, and (2) standard deviation of annual catches, for three areas ('KO' = Kodiak, 'PWS' = Prince William Sound, 'SE' = Southeast). Effect sizes are presented as the percentage change from an increase from 0% to 20% hatchery fish. Dots represent mean estimates and error bars represent 95% CIs."}
+```{r fig2, echo=FALSE, fig.pos="placeHere", fig.cap="Trends in participation, landed catch, mean annual revenue, and effective species diversity for eight selected Alaska salmon fisheries. The troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska."}
+# trends in participation, 
+cfec_all = readRDS("../data-generated/salmon_data_for_paper.rds")
+people = group_by(cfec_all, p_fshy, year) %>% 
+  summarize(n = length(unique(p_holder))) %>% 
+  filter(substr(p_fshy,1,1)=="S")
+people$p_fshy = paste0(substr(people$p_fshy,1,1), substr(people$p_fshy,3,5))
+names(people)[which(names(people)=="p_fshy")]="Permit"
 
-df = readRDS(file=paste0("../data-generated/","region","_df.rds"))
-cbPalette <- c("#009E73", "#4B2E83", "#999999", "#CC79A7", "#D55E00")
+people2 = people[people$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
+people2$Permit[which(people2$Permit=="S01K")] = "KO-seine"
+people2$Permit[which(people2$Permit=="S01M")] = "AP-seine"
+people2$Permit[which(people2$Permit=="S01E")] = "PWS-seine"
+people2$Permit[which(people2$Permit=="S01A")] = "SE-seine"
+people2$Permit[which(people2$Permit=="S03A")] = "SE-drift"
+people2$Permit[which(people2$Permit=="S03E")] = "PWS-drift"
+people2$Permit[which(people2$Permit=="S03T")] = "BB-drift"
+people2$Permit[which(people2$Permit=="S05B")] = "State-troll"
 
-df$fishery[which(df$fishery=="Prince William Sound")] = "PWS"
-df$fishery[which(df$fishery=="SEAK")] = "SE"
-df$fishery[which(df$fishery=="Kodiak")] = "KO"
+people2 = rename(people2, permit = Permit)
+people2 = rename(people2, value = n)
+people2$value = log10(people2$value)
+people2$datatype = "log10 (permit holders)"
 
-p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
-  geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
-  ylab("Effect size (mean)") +
-  xlab("") +
-  geom_errorbar(aes(ymin=bestimate-1.96*bsd, ymax=bestimate+1.96*bsd),
-    position=position_dodge(0.5), alpha=0.5) +
-  scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
-    'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
-  geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_bw() +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
+# trends in landed weight - metric tons
+weight = group_by(cfec_all, p_fshy, year) %>% 
+  summarize(w = sum(g_pounds,na.rm=T) * 0.000453592) %>% 
+  filter(substr(p_fshy,1,1)=="S")
+weight$p_fshy = paste0(substr(weight$p_fshy,1,1), substr(weight$p_fshy,3,5))
+names(weight)[which(names(weight)=="p_fshy")]="Permit"
 
-p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
-  geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
-  ylab("Effect size (sd)") +
-  xlab("") +
-  geom_errorbar(aes(ymin=estimate-1.96*sd, ymax=estimate+1.96*sd),
-    position=position_dodge(0.5), alpha=0.5) +
-  scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
-    'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
-  geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_bw() +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + ylim(c(-0.4,0.4))
+weight = left_join(weight, people)
 
-plot_grid(p1, p2, align = "h", nrow = 1, rel_widths = c(0.43, 0.57))
-#gridExtra::grid.arrange(p1, p2, nrow=1)
+weight2 = weight[weight$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
+weight2$Permit[which(weight2$Permit=="S01K")] = "KO-seine"
+weight2$Permit[which(weight2$Permit=="S01M")] = "AP-seine"
+weight2$Permit[which(weight2$Permit=="S01E")] = "PWS-seine"
+weight2$Permit[which(weight2$Permit=="S01A")] = "SE-seine"
+weight2$Permit[which(weight2$Permit=="S03A")] = "SE-drift"
+weight2$Permit[which(weight2$Permit=="S03E")] = "PWS-drift"
+weight2$Permit[which(weight2$Permit=="S03T")] = "BB-drift"
+weight2$Permit[which(weight2$Permit=="S05B")] = "State-troll"
+
+weight2$wn = log10(weight2$w/weight2$n)
+weight2 = rename(weight2, permit=Permit, value = wn)
+weight2$datatype = "log10 (avg. mt)"
+datf = as.data.frame(rbind(people2[,c("permit","year","value","datatype")],
+  weight2[,c("permit","year","value","datatype")]))
+
+# trends in revenue
+dat.annual = readRDS(file="../data-generated/salmon-annual-for-modeling.rds")
+dat.annual = group_by(dat.annual[which(dat.annual$strategy_permit %in% c("S01A", "S01E", "S01K", "S01M", "S03A", "S03E", "S03T", "S05B")),], year, strategy_permit) %>% 
+  summarize(meanrev = mean(revenue), meandiv = mean(specDiv))
+names(dat.annual)[which(names(dat.annual)=="strategy_permit")]="Permit"
+dat.annual = left_join(dat.annual, weight)
+
+dat.annual2 = dat.annual[dat.annual$Permit%in%c("S01K","S01M","S01E","S01A","S03A","S03E","S03T","S05B"),]
+dat.annual2$Permit[which(dat.annual2$Permit=="S01K")] = "KO-seine"
+dat.annual2$Permit[which(dat.annual2$Permit=="S01M")] = "AP-seine"
+dat.annual2$Permit[which(dat.annual2$Permit=="S01E")] = "PWS-seine"
+dat.annual2$Permit[which(dat.annual2$Permit=="S01A")] = "SE-seine"
+dat.annual2$Permit[which(dat.annual2$Permit=="S03A")] = "SE-drift"
+dat.annual2$Permit[which(dat.annual2$Permit=="S03E")] = "PWS-drift"
+dat.annual2$Permit[which(dat.annual2$Permit=="S03T")] = "BB-drift"
+dat.annual2$Permit[which(dat.annual2$Permit=="S05B")] = "State-troll"
+
+dat.annual2 = rename(dat.annual2, permit=Permit)
+
+dat.annual2$meanrev = log10(dat.annual2$meanrev)
+tempd = as.data.frame(dat.annual2[,c("permit","year","meanrev")])
+names(tempd) = c("permit","year","value")
+tempd$datatype = "log10 (revenue)"
+datf = rbind(datf, tempd)
+
+tempd = as.data.frame(dat.annual2[,c("permit","year","meandiv")])
+names(tempd) = c("permit","year","value")
+tempd$datatype = "Catch diversity"
+datf = rbind(datf, tempd)
+
+datf = rename(datf, Permit = permit)
+
+datf$value[which(datf$year==1989 & datf$Permit == "KO-seine")] = NA
+
+ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + ylab("") + xlab("Year") + facet_wrap(~datatype, scale="free_y") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
 ```
-
-\break  
   
-```{r fig5, fig.pos="placeHere", fig.cap="Time-varying effects of increasing the effective species diversity of catch (1/Simpson's diversity) from 1 to 2 species (presented as log ratio).", echo=FALSE}
+\break  
+
+<!-- TODO Sean: I guess we need to make sure we defined these regions either here or in a table -->
+```{r fig3, echo=FALSE, fig.pos="placeHere", fig.cap="CV and mean annual revenue by salmon permit, 1975--2016. Effective species diversity of catch is shown by circle area (effective species diversity = 1 / Simpson's diversity), and fishing gear type are shown with color shading. Labels indicate regions - the troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska.", warning=FALSE, message=FALSE}
+
+dat.annual <- read.table("../data-generated/bubble_plot_data_fig2.csv", stringsAsFactors = FALSE, header = TRUE)
+
+dat.annual <- mutate(dat.annual,
+  gear = factor(gear, levels = c("Drift gillnet", "Set gillnet", "Hand troll", "Power troll", "Purse seine")))
+
+l <- tibble::tribble(~let, ~label,
+  "H", "CI",
+  "E", "PWS",
+  "L", "CH",
+  "K", "KO",
+  "M", "AP",
+  "T", "BB",
+  "A", "SE",
+  "B", "State",
+  "Z", "NS",
+  "W", "KU",
+  "D", "YAK",
+  "Y", "YUK")
+
+dat.annual <- mutate(dat.annual,
+  let = sub("S[0-9]+([A-Z])", "\\1", dat.annual$strategy_permit)) %>%
+  left_join(l) %>%
+  filter(strategy_permit != "S04Y")
+
+g <- ggplot(dat.annual,
+  aes(x = mean_rev/1e3, y = cv_rev,
+    label = label)) +
+  geom_point(alpha = 0.5, aes(fill = gear, size = diversity), pch = 21,
+    colour = "grey20") +
+  scale_size(range = c(1.5, 15), breaks = seq(1.2, 2.4, 0.4)) +
+  guides(fill = guide_legend(override.aes = list(size = 4, alpha = 0.7), order = 1)) +
+  geom_text_repel(size = 2.6, colour = "grey20",
+    alpha = 1, segment.color = "grey70",
+    point.padding = unit(0, "lines"), max.iter = 1e4, segment.size = 0.3) +
+  scale_fill_brewer(palette = "Set3") +
+  ylab("CV annual revenue") + xlab("Mean revenue ($1000)") +
+  labs(fill = "Gear", size = "Diversity") +
+  scale_y_continuous(breaks = seq(0.2, 1, 0.2)) +
+  theme_sleek() #+
+  # scale_x_log10()
+print(g)
+```
+  
+\break  
+
+```{r fig4, fig.pos="placeHere", fig.cap="Time-varying effects of increasing the effective species diversity of catch (1/Simpson's diversity) from 1 to 2 species (presented as log ratio).", echo=FALSE}
 # make yearpermit df
 diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
@@ -473,7 +428,55 @@ ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
 
 ```
 
+\break  
+
+```{r fig5, echo=FALSE, fig.pos="placeHere", fig.cap=""}
+
+```
+
 \break 
+
+```{r fig6, echo=FALSE, fig.pos="placeHere", fig.cap="Effects of the fraction of hatchery fish on (1) mean annual catches, and (2) standard deviation of annual catches, for three areas ('KO' = Kodiak, 'PWS' = Prince William Sound, 'SE' = Southeast). Effect sizes are presented as the percentage change from an increase from 0% to 20% hatchery fish. Dots represent mean estimates and error bars represent 95% CIs."}
+
+df = readRDS(file=paste0("../data-generated/","region","_df.rds"))
+cbPalette <- c("#009E73", "#4B2E83", "#999999", "#CC79A7", "#D55E00")
+
+df$fishery[which(df$fishery=="Prince William Sound")] = "PWS"
+df$fishery[which(df$fishery=="SEAK")] = "SE"
+df$fishery[which(df$fishery=="Kodiak")] = "KO"
+
+p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
+  geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
+  ylab("Effect size (mean)") +
+  xlab("") +
+  geom_errorbar(aes(ymin=bestimate-1.96*bsd, ymax=bestimate+1.96*bsd),
+    position=position_dodge(0.5), alpha=0.5) +
+  scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
+    'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
+    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
+  geom_hline(aes(yintercept=0), linetype = 2) +
+  theme_bw() +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
+
+p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
+  geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
+  ylab("Effect size (sd)") +
+  xlab("") +
+  geom_errorbar(aes(ymin=estimate-1.96*sd, ymax=estimate+1.96*sd),
+    position=position_dodge(0.5), alpha=0.5) +
+  scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
+    'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
+    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
+  geom_hline(aes(yintercept=0), linetype = 2) +
+  theme_bw() +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + ylim(c(-0.4,0.4))
+
+plot_grid(p1, p2, align = "h", nrow = 1, rel_widths = c(0.43, 0.57))
+#gridExtra::grid.arrange(p1, p2, nrow=1)
+```
+
 \break  
   
 # References
