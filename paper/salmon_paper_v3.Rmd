@@ -20,6 +20,7 @@ library(tidyverse)
 library(ggsidekick)
 library(ggrepel)
 library(reshape2)
+library(viridis)
 library(date)
 library(mgcv)
 library(gridExtra)
@@ -159,7 +160,7 @@ g1 = ggplot(dat, aes(Year, value)) +
   scale_fill_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2], 
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Sockeye","Coho","Pink","Chum")) + 
-  facet_wrap(~region, scale="free_y") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  facet_wrap(~region, scale="free_y") + theme_sleek()
 
 # bring in total harvest data (hatchery + wild)
 hatch = read.csv("../data-generated/commonPropertyCommercialCatch.csv",
@@ -208,7 +209,7 @@ g2 = ggplot(hatch, aes(Year, value, color=Species)) +
   xlab("Year") + ylab("Hatchery fraction of total catch") + 
   scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2], 
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Sockeye","Coho","Pink","Chum")) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    labels =c("Chinook","Sockeye","Coho","Pink","Chum")) + theme_sleek()
 
 gridExtra::grid.arrange(g1, g2)
 
@@ -307,7 +308,7 @@ datf = rename(datf, Permit = permit)
 
 datf$value[which(datf$year==1989 & datf$Permit == "KO-seine")] = NA
 
-ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + ylab("") + xlab("Year") + facet_wrap(~datatype, scale="free_y") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + ylab("") + xlab("Year") + facet_wrap(~datatype, scale="free_y") + theme_sleek()
 
 ```
   
@@ -424,14 +425,25 @@ df$permits[which(df$permits=="S03E")] = "PWS-drift"
 ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
   geom_ribbon(aes(ymin=low,ymax=high), fill="blue",alpha=0.4) +
   geom_line(col="blue") + 
-  facet_wrap(~permits) + xlab("Year") + ylab("Effect of increased catch diversity on mean revenue") + geom_hline(yintercept=0, color="red", linetype = 2, alpha = 0.3) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  facet_wrap(~permits) + xlab("Year") + ylab("Effect of increased catch diversity on mean revenue") + geom_hline(yintercept=0, color="red", linetype = 2, alpha = 0.3) + theme_sleek()
 
 ```
 
 \break  
 
-```{r fig5, echo=FALSE, fig.pos="placeHere", fig.cap=""}
+```{r fig5, echo=FALSE, fig.pos="placeHere", fig.cap="Correlation between catch diversity (1 / Simpson's diversity) and harvest of dominant hatchery species. For Southeast Alaska gillnet and seine fisheries we use harvest of hatchery chum salmon, for PWS gillnet fishery we use harvest of hatchery sockeye salmon, and for the PWS seine fishery we use harvest of hatchery pink salmon. "}
 
+d = readRDS(file=paste0("../data-generated/hatchery_diversity.rds"))
+d$p  <- d$p*0.453592 / 1e6 # convert to kg
+
+p1 = ggplot(d, aes(p, tot_div, col=year)) +
+  geom_point(size=2) +
+  xlab("Hatchery harvest (million kg)") +
+  ylab("Catch diversity") +
+  facet_wrap(~p_fshy, scale="free_x") +
+  scale_color_viridis() + 
+  theme_sleek() + labs(colour = "Year")
+p1
 ```
 
 \break 
@@ -455,9 +467,7 @@ p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_bw() +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
+  theme_sleek() + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
 
 p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
   geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
@@ -469,9 +479,7 @@ p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_bw() +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_flip() + ylim(c(-0.4,0.4))
+  theme_sleek() + coord_flip() + ylim(c(-0.4,0.4))
 
 plot_grid(p1, p2, align = "h", nrow = 1, rel_widths = c(0.43, 0.57))
 #gridExtra::grid.arrange(p1, p2, nrow=1)
