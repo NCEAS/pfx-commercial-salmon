@@ -1,17 +1,18 @@
 ---
-title: Effects of increased specialization and hatchery production on revenue variability of Alaskan salmon fishers
+title: Effects of increased specialization and hatchery production on revenue variability
+  of Alaskan salmon fishers
 author: "Eric, Sean, Ole, Rich, Jordan, Jen, Anne, Alan, Milo, Ben"
 date: ''
 output:
   pdf_document:
     fig_caption: yes
-    latex_engine: xelatex
     includes:
       in_header: options.sty
+    latex_engine: xelatex
   html_document: default
   word_document: default
-bibliography: CatchPortfolios_salmon.bib
 csl: journal-of-applied-ecology.csl
+bibliography: CatchPortfolios_salmon.bib
 ---
 
 <!-- Sean: I tried adding the in_header bit for double spacing and line numbers ... but I can't build it to check if it works. The other option is to include the latex code verbatim with the header-includes: tag -->

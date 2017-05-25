@@ -22,6 +22,7 @@ library(fpc)
 library(gridExtra)
 library(glmmTMB)
 library(zoo)
+library(ggsidekick)
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -151,11 +152,9 @@ seasons$permit[which(seasons$permit=="S 01M")] = "AP-seine"
 seasons$permit[which(seasons$permit=="S 03A")] = "SE-gillnet"
 seasons$permit[which(seasons$permit=="S 03E")] = "PWS-gillnet"
 
-appendixPlot0_p1 = ggplot(seasons, aes(year, q, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Mean julian day") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+appendixPlot0_p1 = ggplot(seasons, aes(year, q, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Mean julian day") + theme_sleek()
 
-appendixPlot0_p2 = ggplot(seasons, aes(year, length, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Season length") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+appendixPlot0_p2 = ggplot(seasons, aes(year, length, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Season length") + theme_sleek()
 ```
 
 \break  
@@ -182,19 +181,16 @@ agg.annual$label[which(agg.annual$strategy_permit == "S04M")] = "AP-set"
 agg.annual$label[which(agg.annual$strategy_permit == "S04T")] = "BB-set"
 
 agg.annual = agg.annual[-which(agg.annual$label=="KU-drift"),]
-appendixPlot1 = ggplot(agg.annual, aes(year, people, colour = specDiv)) + geom_line() + facet_wrap(~ label, scale="free") + ylab("Participation") + xlab("Year")
+appendixPlot1 = ggplot(agg.annual, aes(year, people, colour = specDiv)) + geom_line() + facet_wrap(~ label, scale="free") + ylab("Participation") + xlab("Year") + theme_sleek()
 
 aggdiff = agg.diff[which(agg.diff$strategy_permit %in% unique(agg.annual$strategy_permit)),]
 aggdiff$label = agg.annual$label[match(aggdiff$strategy_permit, agg.annual$strategy_permit)]
 
-appendixPlot2_p1 = ggplot(aggdiff, aes(specDiv, log(meanrev), colour = cv, label=label)) + xlab("Species diversity") +ylab("Ln (mean revenue)") + geom_text(size=2) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+appendixPlot2_p1 = ggplot(aggdiff, aes(specDiv, log(meanrev), colour = cv, label=label)) + xlab("Species diversity") +ylab("Ln (mean revenue)") + geom_text(size=2) + theme_sleek()
 
-appendixPlot2_p2 = ggplot(aggdiff, aes(specDiv, cv, colour = log(meanrev), label=label)) + xlab("Species diversity") +ylab("CV") + geom_text(size=2) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+appendixPlot2_p2 = ggplot(aggdiff, aes(specDiv, cv, colour = log(meanrev), label=label)) + xlab("Species diversity") +ylab("CV") + geom_text(size=2) + theme_sleek() 
 
-appendixPlot2_p3 = ggplot(aggdiff, aes(log(meanrev), cv, colour = specDiv, label=label)) + ylab("CV") + xlab("Ln (mean revenue)") + geom_text(size=2) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+appendixPlot2_p3 = ggplot(aggdiff, aes(log(meanrev), cv, colour = specDiv, label=label)) + ylab("CV") + xlab("Ln (mean revenue)") + geom_text(size=2) + theme_sleek()
 ```
   
 \break  
@@ -231,42 +227,42 @@ g1 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01A" & cfec.raw$spec %in% c("CHUM","C
   ylab("Species %") + xlab("") + ggtitle("SE-seine") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
     'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none")
+    labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none") + theme_sleek()
 
 g2 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01E" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("PWS-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
 
 g3 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01K" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("KO-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
 
 g4 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01M" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("AP-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name = "Species", labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none")
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name = "Species", labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none") + theme_sleek()
 
 g5 = group_by(cfec.raw[cfec.raw$p_fshy=="S 03A" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("SE-gillnet") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
 
 g6 = group_by(cfec.raw[cfec.raw$p_fshy=="S 03E" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK") & cfec.raw$year > 0,], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("PWS-gillnet") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
 
 dat.diff = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 dat.diff = dat.diff[which(dat.diff$revenue >= 10000 & dat.diff$revenue.prev >= 10000), ]
@@ -275,32 +271,32 @@ dat.salmon = dat.diff[dat.diff$strategy_permit%in%c("S01A", "S01E", "S01K", "S03
 h1 = group_by(dat.salmon[dat.salmon$strategy_permit=="S01A",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 h2 = group_by(dat.salmon[dat.salmon$strategy_permit=="S01E",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 h3 = group_by(dat.salmon[dat.salmon$strategy_permit=="S01K",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 h4 = group_by(dat.salmon[dat.salmon$strategy_permit=="S01M",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 h5 = group_by(dat.salmon[dat.salmon$strategy_permit=="S03A",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 h6 = group_by(dat.salmon[dat.salmon$strategy_permit=="S03E",], year, strategy_permit) %>%
   summarize(meanDiv = mean(specDiv), low = quantile(specDiv,0.25), upp = quantile(specDiv,0.75)) %>%
   ggplot(aes(year, meanDiv)) + geom_line() + 
-  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none")
+  geom_ribbon(aes(ymin= (low), ymax= (upp)), alpha=0.4) + ylab("Diversity") + xlab("") + theme(legend.position="none") + theme_sleek()
 
 ```
 
@@ -311,7 +307,6 @@ gridExtra::grid.arrange(g1, g2, g3, h1, h2, h3, nrow=2)
 ```{r figa4, echo=FALSE, fig.pos="placeHere", fig.cap="Time varying species composition and effective species diversity (1 / Simpson's Diversity), by permit, for seine fisheries on the Alaska Peninsula ('AP', S01M), and gillnet fisheries in Southeast Alaska ('SE', S03A) and Prince William Sound ('PWS', S03E).", fig.height=3.2} 
 gridExtra::grid.arrange(g4, g5, g6, h4, h5, h6, nrow=2)
 ```
-
 
 \break  
 
@@ -327,8 +322,7 @@ g = group_by(diffdat, strategy_permit, year) %>%
     lower = quantile(specDiv - specdiv.prev, 0.025),
     upper = quantile(specDiv - specdiv.prev, 0.975))
 
-g1 = ggplot(g, aes(year, mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha=0.3, fill="blue") + geom_line(color="blue") + facet_wrap(~strategy_permit) + xlab("Year") + ylab("Change in effective catch diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1 = ggplot(g, aes(year, mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha=0.3, fill="blue") + geom_line(color="blue") + facet_wrap(~strategy_permit) + xlab("Year") + ylab("Change in effective catch diversity") + theme_sleek()
 
 g1
 ```
@@ -369,8 +363,7 @@ g1 = ggplot(data=yearpermit2) +
   geom_line(aes(x=year,y=b0)) + 
   facet_wrap(~permit) + xlab("Year") + 
   ylab("Intercepts on mean") + 
-  geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  geom_hline(yintercept=0, color="red") + theme_sleek()
 g1
 ```
 
@@ -436,8 +429,7 @@ for(i in 1:nrow(df)) {
 g1 = ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
   geom_line() +
   geom_ribbon(aes(ymin=low,ymax=high), alpha=0.4) +
-  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal effect") + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  facet_wrap(~permits) + xlab("Year") + ylab("Predicted marginal effect") + geom_hline(yintercept=0, color="red") + theme_sleek()
 g1
 ``` 
 
@@ -459,8 +451,7 @@ xx = exp(extract(mod)[["sd_yr"]] + offset)
 df.spec = data.frame("year"=yrs, "mean" = apply(xx, 2, mean), "low" = apply(xx, 2, quantile, 0.025),
   "hi" = apply(xx, 2, quantile, 0.975), "strategy"="pink")
 
-g1 = ggplot(data=rbind(df.gen,df.spec), aes(year, mean, group=strategy, fill=strategy)) + geom_ribbon(aes(ymin=low,ymax=hi), alpha=0.5) + geom_hline(yintercept=0, color="red") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1 = ggplot(data=rbind(df.gen,df.spec), aes(year, mean, group=strategy, fill=strategy)) + geom_ribbon(aes(ymin=low,ymax=hi), alpha=0.5) + geom_hline(yintercept=0, color="red") + theme_sleek()
 g1
 ```
 
@@ -515,8 +506,7 @@ df_s01e_b1 = df
 diffdat = readRDS(file="../data-generated/salmon.rds")
 diffdat = filter(diffdat, !is.na(days.change))
 
-g1 = ggplot(diffdat, aes(log(weight)-log(weight.prev), specDiv.change)) + geom_point(alpha=0.15, col="blue", size=0.4) + facet_wrap(~ strategy_permit) + xlab("Change in ln annual landed weight") + ylab("Change in effective species diversity") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1 = ggplot(diffdat, aes(log(weight)-log(weight.prev), specDiv.change)) + geom_point(alpha=0.15, col="blue", size=0.4) + facet_wrap(~ strategy_permit) + xlab("Change in ln annual landed weight") + ylab("Change in effective species diversity") + theme_sleek()
 g1
 ```
 
@@ -537,8 +527,7 @@ pinkPWS$diff = c(NA, diff(log(pinkPWS$Pink_total)))
 
 pinkPWS = dplyr::left_join(pinkPWS, S01E)
 
-g1 = ggplot(data=pinkPWS, aes(b0, diff,color=Year)) + geom_point() + stat_smooth(method=lm) + xlab("Estimated intercept from model") + ylab("Change in total pink salmon returns") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+g1 = ggplot(data=pinkPWS, aes(b0, diff,color=Year)) + geom_point() + stat_smooth(method=lm) + xlab("Estimated intercept from model") + ylab("Change in total pink salmon returns") + theme_sleek()
 g1
 ```
 
@@ -560,8 +549,7 @@ cfec.raw$area[cfec.raw$p_fshy%in%c("S 01M")] = "Alaska Peninsula"
 g1 = group_by(cfec.raw[cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, area) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, area) %>%
   ggplot(aes(year, (p)/1e6, group=spec, color = spec)) + geom_line() + facet_wrap(~area, scale="free") +
-  ylab("Revenue (millions) ") + xlab("Year") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  ylab("Revenue (millions) ") + xlab("Year") + theme_sleek()
 g1
 ```
 
@@ -575,8 +563,7 @@ p1 = group_by(g, spec, area) %>%
   mutate(p = p/p[which(year==2002)]) %>% 
   group_by(year, area) %>%
   ggplot(aes(year, log(p), group=spec, color = spec)) + geom_line() + facet_wrap(~area) +
-  ylab("Ln avg price relative to 2002") + ggtitle("Synchrony in prices: relative change") + xlab("") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  ylab("Ln avg price relative to 2002") + ggtitle("Synchrony in prices: relative change") + xlab("") + theme_sleek()
 p1
 
 ```
@@ -591,14 +578,12 @@ g$p_t1 = g$p[match(paste(g$year, g$spec, g$area),
 
 p2 = group_by(g, spec, area) %>% 
   ggplot(aes(year, log(p/p_t1), group=spec, color = spec)) + geom_line() + facet_wrap(~area) +
-  ylab("Ln price (t/t-1)") + ggtitle("Synchrony in prices: percent change") + xlab("") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  ylab("Ln price (t/t-1)") + ggtitle("Synchrony in prices: percent change") + xlab("") + theme_sleek()
 p2
 
 g$logdiff = log(g$p/g$p_t1)
 p3 = group_by(g, year, area) %>% 
-summarize(sd = sd(logdiff,na.rm=TRUE)) %>% ggplot(aes(year, sd, color=area)) + geom_line() + xlab("Year") + ylab("SD of price changes across species") + ggtitle("Synchrony in price fluctuations across species") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+summarize(sd = sd(logdiff,na.rm=TRUE)) %>% ggplot(aes(year, sd, color=area)) + geom_line() + xlab("Year") + ylab("SD of price changes across species") + ggtitle("Synchrony in price fluctuations across species") + theme_sleek()
 
 ```
 
@@ -606,17 +591,16 @@ panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 p3
 ```
 
-
 \break
   
+```{r, echo=FALSE, eval=FALSE}
 ## Causality between lagged abundance and prices
 
-Previous work on long term trends in Alaska salmon markets have highlighted effects of changing production practices, including freezing (Knapp et al. 2012). Caches of frozen salmon from large harvest may have competitive effects on prices 1-2 years later. Using a Granger test for causality between first-differenced time series of harvest and prices, this effect is particularly true for coho and sockeye salmon, where abundance at time *t-1* or *t-2* improves predictions of prices at time *t*.
-
-```{r, echo=FALSE}
 library(knitr)
 d = read.table("../data-generated/granger_table.csv", sep=",", header=TRUE)
 kable(d)
+Previous work on long term trends in Alaska salmon markets have highlighted effects of changing production practices, including freezing (Knapp et al. 2012). Caches of frozen salmon from large harvest may have competitive effects on prices 1-2 years later. Using a Granger test for causality between first-differenced time series of harvest and prices, this effect is particularly true for coho and sockeye salmon, where abundance at time *t-1* or *t-2* improves predictions of prices at time *t*.
+
 ```
 
 ```{r echo=FALSE, eval=FALSE}
