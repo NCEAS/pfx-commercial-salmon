@@ -16,27 +16,25 @@ csl: journal-of-applied-ecology.csl
 
 <!-- Sean: I tried adding the in_header bit for double spacing and line numbers ... but I can't build it to check if it works. The other option is to include the latex code verbatim with the header-includes: tag -->
 
-<!-- Sean: If the file is small then it might make sense to commit the file salmon_data_for_paper.rds so that the paper is reproducible (and so I can build it) -->
-
 <!--  Pasting this here to help with filling in the other information:
 
-\author[a]{Sean C. Anderson}
-\author[b]{Eric J. Ward}
-\author[b]{Andrew O. Shelton}
+\author[a]{Eric J. Ward}
+\author[b]{Sean C. Anderson}
+\author[a]{Andrew O. Shelton}
+\author[d]{Richard E. Brenner}
 \author[c]{Milo D. Adkison}
 \author[c]{Anne H. Beaudreau}
-\author[d]{Richard E. Brenner}
-\author[e]{Alan C. Haynie}
-\author[d]{Jennifer C. Shriver}
 \author[f]{Jordan T. Watson}
+\author[d]{Jennifer C. Shriver}
+\author[e]{Alan C. Haynie}
 \author[d]{Benjamin C. Williams}
 
-\affil[a]{School of Aquatic and Fishery Sciences, Box 355020,
-University of Washington, Seattle, WA 98195, USA}
-
-\affil[b]{Conservation Biology Division, Northwest Fisheries Science Center,
+\affil[a]{Conservation Biology Division, Northwest Fisheries Science Center,
 National Marine Fisheries Service, National Oceanographic and
 Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA}
+
+\affil[b]{School of Aquatic and Fishery Sciences, Box 355020,
+University of Washington, Seattle, WA 98195, USA}
 
 \affil[c]{College of Fisheries and Ocean Sciences, University of Alaska Fairbanks,
 17101 Point Lena Loop Rd, Juneau, AK, 99801, USA}
@@ -75,19 +73,15 @@ modelname = "model-linear-iid" # model-linear-nointeractions
 ## Abstract
 \setlength\parindent{24pt}
 
-On a large scale, individual commercial fishers may experience positive outcomes from diversifying their catches; benefits may include reduced year-to-year variability in annual revenue or increases in average revenue. Fishers can increase the species diversity of their catch if they own fishing permits that allow multiple species to be targeted, or if they own multiple permits. Factors may disincentivize or prohibit individuals from holding multiple permits. Thus, individuals holding a single permit may only be able to increase species diversity within the confines of their permit (e.g., by fishing longer or over a broader spatial area). Using a large dataset of individual salmon fishers in Alaska 1975--2016, we develop new models for understanding how the effects of diversification on revenue have changed through time. Applying these models to six salmon fisheries that encompass a broad geographic range and a variety of harvesting methods and dominant species, we find that the majority of these fisheries have experienced reduced diversity in catches through time, and increasing benefits of specialization on mean individual revenues. One of the mechanisms that has been hypothesized to reduce catch variability in Alaska has been large-scale hatchery production; however, our results across fisheries suggest that there is little change in variability, either positive or negative, as a result of increased hatchery influence. However, individuals participating in fisheries with high contributions of hatchery pink salmon have the highest variability in year-to-year revenue, suggesting that risk may be partially determined by life-history characteristics of species targeted.
+On a large scale, individual commercial fishers may experience positive outcomes from diversifying their catches; benefits may include reduced year-to-year variability in annual revenue or increases in average revenue. Fishers can increase the species diversity of their catch if they own fishing permits that allow multiple species to be targeted, or if they own multiple permits. Factors may disincentivize or prohibit individuals from holding multiple permits. Thus, individuals holding a single permit may only be able to increase species diversity within the confines of their permit (e.g., by fishing longer or over a broader spatial area). Using a large dataset of individual salmon fishers in Alaska 1975--2016, we develop new models for understanding how the effects of diversification impacts revenue, and how these effects have changed through time. Applying these models to six salmon fisheries that encompass a broad geographic range and a variety of harvesting methods and dominant species, we find that the majority of these fisheries have experienced reduced catch diversity through time, and increasing benefits of specialization on mean individual revenues. One of the mechanisms that has been hypothesized to reduce catch variability in Alaska has been large-scale hatchery production; while we find negative correlations between hatchery returns and catch diversity for some fisheries, across fisheries our results suggest that there is little change in variability, either positive or negative, as a result of increased hatchery influence. However, individuals participating in fisheries with high contributions of hatchery pink salmon have the highest variability in year-to-year revenue, suggesting that risk may be partially determined by life-history characteristics of species targeted.
   
 ## Introduction  
 
 Commercial fishers experience high degrees of variability in revenue [@sethi2012; @anderson_benefits]. Understanding the incentives and risks that fishers experience, as well as the diversification strategies they adopt to minimize year-to-year variability in revenue is important for maintaining sustainable livelihoods and productive fisheries. As in terrestrial agriculture [@purdy1997], diversifying catch may affect the mean or variance of revenue. Another parallel between fishers and farmers is that while the strategies of both may have some impact on revenue, a number of external drivers may also affect the ability or incentives to diversify. For commercial fishers, some of these factors include include prices offered by processors, the relative abundance of species, and regulatory changes such as the adoption of catch share programs or area restrictions. Because of the complexities of these factors, any benefits or costs of fishers diversifying may be variable through time.
 
-Some of the most detailed analyses of relationships between catch diversification and revenue have been focused on Alaskan fisheries. Fisheries in Alaska are among the most productive in the world [both by landed weight, and revenue; @officeofscienceandtechnology2016; @fissel2016] and individual fishers adopt a broad range of strategies allowing the effects of diversification on fishing success (revenue) to be quantified. Previous analyses have looked at effects of diversification of communities [@sethi2014; @cline2017; @himes-cornell2015; @loring2016], vessels [@kasperski2013] and individual fishers [@anderson_benefits]. One emergent pattern across these scales is that though catch diversity may act as stabilizing force against variability in income [@nesbitt2014], there are many instances where specialization may be beneficial, to the extent that individuals may accept the risks of higher variability when it is accompanied by higher mean revenue [@anderson_benefits].
+Some of the most detailed analyses of relationships between catch diversification and revenue have been focused on Alaskan fisheries. Fisheries in Alaska are among the most productive in the world [both by landed weight, and revenue; @officeofscienceandtechnology2016; @fissel2016] and individual fishers adopt a broad range of strategies allowing the effects of diversification on fishing success (revenue) to be quantified. Previous analyses have looked at effects of diversification of communities [@sethi2014; @cline2017; @himes-cornell2015; @loring2016], vessels [@kasperski2013] and individual fishers [@anderson_benefits]. One emergent pattern across these scales is that diversity may act as stabilizing force against catch variability, but there are many instances where specialization may be beneficial, to the extent that individuals may accept the risks of higher variability when it is accompanied by higher mean revenue [@anderson_benefits].
 
-<!-- Instead of the thesis reference Nesbitt there is now the publication Nesbitt, H.K. and J.W. Moore. 2016. Species- and population diversity in Pacific salmon fisheries underpin indigenous food security. Journal of Applied Ecology 53: 1489–1499. But this and the thesis is primarily about catch and food stability not income so maybe delete this reference or change how it is cited? -->
-
-[@anderson_benefits] defined fishing strategies by the permit or collection of permits held by single individuals. Some permits in Alaskan waters allow only one species to be targeted (e.g. sablefish, halibut, herring, crab, shellfish, and sea cucumber), while others allow multiple species to be harvested (federally managed groundfish fisheries, state managed salmon fisheries). Buying new permits offers another mechanism for diversification, where individuals can fish in more regions or to target additional species. Though salmon fishers are already specialized, understanding the effects of catch diversification on revenue is important because annual revenue from salmon fisheries has recently exceeded that of all other fisheries combined [@anderson_benefits]. 
-<!-- Sean : I don't think we show that do we? What we do show in figure one is that single permit holders now exceed total revenue of multiple permit holders. -->
-Though participation in many Alaskan fisheries has declined since the 1980s, many salmon fisheries have seen upticks in participation since 2000 (Figs. A1-A2). Many of these salmon fishers are increasingly salmon specialists, defined as individuals whose fishing revenue comes from a single salmon permit [@anderson_benefits].
+[@anderson_benefits] defined fishing strategies by the permit or collection of permits held by single individuals. Some permits in Alaskan waters allow only one species to be targeted (e.g. sablefish, halibut, herring, crab, shellfish, and sea cucumber), while others allow multiple species to be harvested (federally managed groundfish fisheries, state managed salmon fisheries). Buying new permits offers another mechanism for diversification, where individuals can fish in more regions or to target additional species. Though salmon fishers are already specialized, understanding the effects of catch diversification on revenue is important because more individuals are becoming salmon specialists, and annual revenue from single permit holders has recently exceeded that of individuals holding multiple permits [@anderson_benefits]. Though participation in many Alaskan fisheries has declined since the 1980s, many salmon fisheries have seen upticks in participation since 2000 (Figs. A1-A2). Many of these salmon fishers are increasingly salmon specialists, defined as individuals whose fishing revenue comes from a single salmon permit [@anderson_benefits].
 
 Five species of salmon are harvested in Alaska waters (Chinook [*Oncorhynchus tshawytscha*], chum [*O. keta*], pink [*O. gorbuscha*], sockeye [*O. nerka*], coho [*O. kisutch*]), and individual salmon fishers can diversify their catch among the five species. However, fishing permits are available for particular gear types by region within Alaska and in practice these fisheries show a range of species diversity. Most salmon are caught with purse seines (6 permit-regions), drift gillnets (5), or set gillnets (12). While multiple salmon species are captured in some of these fisheries, there are also examples of fisheries where catch is dominated by a single species. Examples of specialized fisheries with low catch diversity include those that exclusively fish sockeye salmon (e.g. Bristol Bay set and drift gillnet fisheries). For these unique fisheries, specialization is associated with higher revenue and reduced variability in year-to-year revenue [@anderson_benefits].
 
@@ -135,9 +129,7 @@ To quantify relationships between hatchery production and revenue or revenue var
 
 ### Estimation  
 
-Estimation for both sets of models was done in a Bayesian framework using R [@rcoreteam2017] and the package `rstan` [@standevelopmentteam2016], implementing Markov chain Monte Carlo (MCMC) using the No-U Turn Sampling (NUTS) algorithm [@hoffman2014; @standevelopmentteam2015; @standevelopmentteam2015a]. Runs for each model included 3-4 MCMC chains, with a warmup period of 4000 samples, followed by 5000 iterations. Code to replicate our analysis, including additional diagnostics plots, and additional models is available at <https://github.com/NCEAS/pfx-commercial-salmon>.
-
-<!-- Sean : does it really vary between 3 and 4 chains? -->
+Estimation for both sets of models was done in a Bayesian framework using R [@rcoreteam2017] and the package `rstan` [@standevelopmentteam2016], implementing Markov chain Monte Carlo (MCMC) using the No-U Turn Sampling (NUTS) algorithm [@hoffman2014; @standevelopmentteam2015; @standevelopmentteam2015a]. Runs for each model included 3 MCMC chains, with a warmup period of 4000 samples, followed by 5000 iterations. Code to replicate our analysis, including additional diagnostics plots, and additional models is available at <https://github.com/NCEAS/pfx-commercial-salmon>.
 
 ## Results
 
@@ -145,16 +137,11 @@ Since the early 2000s, general trends in Alaskan salmon fisheries are that more 
 
 Most fishers participating in the six salmon fisheries in our analysis experience changes in effective catch diversity that are typically between +/- 1 (Fig. A5). Our model of individual revenues suggests that catch diversity in these six fisheries has declined over time (Figs. A3--A4). The estimated negative effects of increasing diversity on mean revenue (Fig. 4) implies that for the majority of these fisheries in most years, revenue increases when individuals specialize, rather than increase the diversity of their catches. The slight negative trends in these estimated effects for some fisheries in recent years (PWS and SE drift gillnet) suggest that the benefits of specializing have also increased over time (Fig. 4). More importantly, our estimates suggest that individuals experience rapidly changing incentives to diversify over time. From 2008--2010 for example, it was not beneficial for individuals in the PWS or SE seine fisheries to diversify (negative effects in Fig. 4), but several years later these trends changed slightly positive for seine fisheries, indiciating a more diverse catch translated into higher revenue (Fig. 4). 
 
-Our results also showed contrasts in year-to-year variability between seine and gillnet fisheries, with individuals in seine fisheries experiencing higher annual variability in revenue (Fig. A6) --- across individual fishers, seine fisheres are generally higher on axes of risk and return (CV of annual revenue versus mean annual revenue; Fig. 3). Though the catch composition of each of these fisheries has fluctuated through time, in areas where seine and gillnet fisheries exist (Prince William Sound, Southeast Alaska), catch diversity is slightly higher in gillnet fisheries (Figs A3--A4). In most fisheries, we found little evidence that individuals who increased catch diversity reduced their revenue variability (Fig. A7). For several fisheries (SE seine and gillnet, PWS seine),
-<!-- Sean : I think the positive effect for Prince William sound looks stronger in the gill net -->
-there have been periods over the last several decades where diversification has increased variability, such as 2008--2010 (Fig. A7). For most other fisheries, these effects of diversifying are near zero or slightly positive (Fig. A7). 
+Our results also showed contrasts in year-to-year variability between seine and gillnet fisheries, with individuals in seine fisheries experiencing higher annual variability in revenue (Fig. A6) --- across individual fishers, seine fisheres are generally higher on axes of risk and return (CV of annual revenue versus mean annual revenue; Fig. 3). Though the catch composition of each of these fisheries has fluctuated through time, in areas where seine and gillnet fisheries exist (Prince William Sound, Southeast Alaska), catch diversity is slightly higher in gillnet fisheries (Figs A3--A4). In most fisheries, we found little evidence that individuals who increased catch diversity reduced their revenue variability (Fig. A7). For several fisheries (SE seine and gillnet, PWS gillnet), there have been periods over the last several decades where diversification has increased variability, such as 2008--2010 (Fig. A7). For most other fisheries, these effects of diversifying are near zero or slightly positive (Fig. A7). 
 
-For the four fisheries in Prince William Sound and Southeast Alaska that are influenced by hatchery production, we found negative correlations between the size of the dominant hatchery species and total catch diveristy in all but the SE seine fishery (Fig. 5). These correlations were strongest for seine fisheries in Southeast Alaska targeting chum salmon $\rho = -0.76$ ($P < 0.01$) and for the PWS fishery targeting pink salmon $\rho = -0.41$ ($P < 0.01$).
-<!-- Sean: the Southeast Alaska seine looks the least strong are you sure the rho value in the previous sentence is correct? Or is this sentence supposed to refer to a different panel? -->
+For the four fisheries in Prince William Sound and Southeast Alaska that are influenced by hatchery production, we found negative correlations between the size of the dominant hatchery species and total catch diveristy in all but the SE seine fishery (Fig. 5). These correlations were strongest for gillnet fisheries in Southeast Alaska targeting chum salmon $\rho = -0.76$ ($P < 0.01$) and for the PWS fishery targeting pink salmon $\rho = -0.41$ ($P < 0.01$).
 
 Modeling relationships between variability of catches and the hatchery contribution to returns, we found no consistent support for strong positive or negative relationships. To allow for comparison across regions and scales of data, we converted these estimates to effect sizes, calculating the approximate percent change in standard deviation resulting from the hatchery contribution increasing by 20%, ${ \kappa  }_{ s }=ln\left( \frac { { g }_{ 0,s }+{ 0.2 \cdot g }_{ 1,s } }{ { g }_{ 0,s } }  \right)$. For the four regions in our analyses, most estimates of these effect sizes are near zero (Fig. 6). The largest positive correlations between hatchery contribution and variability in catches appeared to be for coho and pink salmon in PWS (Fig. 6), and a slight negative effect was found between the hatchery contribution and Chinook catches in Southeast Alaska. The 95% credible intervals for these estimates overlap zero, however, and the estimated effect sizes are small in magnitude (a 20% increase in hatchery fish results in < 20% increase in the standard deviation of catches).
-
-<!-- Sean: Maybe we could standardize the color schemes is much as possible across the figures? The first obvious one is to match the colors of figure 6 and figure 1 to the same species. Actually, maybe that's the only place we can standardize the color legends. -->
 
 ## Discussion
 
@@ -273,9 +260,7 @@ saveRDS(dat, file="../data-generated/hatchery_harvest_millions.rds")
 
 \break  
 
-<!-- Sean: I wonder if we should just spell out the region names or only a much smaller audience familiar with Alaska will be able to easily figure out the figures at first glance. If we don't spell them out then perhaps we should describe the abbreviations in each caption or at least describe the abbreviations not given in the previous captions (BB) -->
-
-```{r fig2, echo=FALSE, fig.pos="placeHere", fig.cap="Trends in participation, landed catch, mean annual revenue, and effective species diversity for eight selected Alaska salmon fisheries. The troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska."}
+```{r fig2, echo=FALSE, fig.pos="placeHere", fig.cap="Trends in participation, landed catch, mean annual revenue, and effective species diversity for eight selected Alaska salmon fisheries. The troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska. Areas associated with permits include the Alaska Peninsula (AP), Bristol Bay (BB), Kodiak (KO), Prince William Sound (PWS), Southeast Alaska (SE)."}
 # trends in participation, 
 cfec_all = readRDS("../data-generated/salmon_data_for_paper.rds")
 people = group_by(cfec_all, p_fshy, year) %>% 
@@ -364,10 +349,7 @@ ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + y
   
 \break  
 
-
-<!-- Sean: There are some new labels that we need to define in the captions. YAK, CH, CI, KU, NS... and perhaps we should just define the rest as well here. -->
-
-```{r fig3, echo=FALSE, fig.pos="placeHere", fig.cap="CV and mean annual revenue by salmon permit, 1975--2016. Effective species diversity of catch is shown by circle area (effective species diversity = 1 / Simpson's diversity), and fishing gear type are shown with color shading. Labels indicate regions --- the troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska.", warning=FALSE, message=FALSE}
+```{r fig3, echo=FALSE, fig.pos="placeHere", fig.cap="CV and mean annual revenue by salmon permit, 1975--2016. Effective species diversity of catch is shown by circle area (effective species diversity = 1 / Simpson's diversity), and fishing gear type are shown with color shading. Labels indicate regions --- Alaska Peninsula (AP), Bristol Bay (BB), Chignik (CH), Cook Inlet (CI), Kodiak (KO), Kuskokwim (KU), Norton Sound (NS), Prince William Sound (PWS), Southeast Alaska (SE), Yakutat (YAK). The troll fishery permit does not have an associated area (statewide) but the majority of fishing is done in Southeast Alaska.", warning=FALSE, message=FALSE}
 
 dat.annual <- read.table("../data-generated/bubble_plot_data_fig2.csv", stringsAsFactors = FALSE, header = TRUE)
 
@@ -503,6 +485,8 @@ p1
 ```{r fig6, echo=FALSE, fig.pos="placeHere", fig.cap="Effects of the fraction of hatchery fish on (1) mean annual catches, and (2) standard deviation of annual catches, for three areas ('KO' = Kodiak, 'PWS' = Prince William Sound, 'SE' = Southeast). Effect sizes are presented as the percentage change from an increase from 0% to 20% hatchery fish. Dots represent mean estimates and error bars represent 95% CIs."}
 
 df = readRDS(file=paste0("../data-generated/","region","_df.rds"))
+
+# chinook chum coho pink sock
 cbPalette <- c("#009E73", "#4B2E83", "#999999", "#CC79A7", "#D55E00")
 
 df$fishery[which(df$fishery=="Prince William Sound")] = "PWS"
@@ -517,7 +501,7 @@ p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
     position=position_dodge(0.5), alpha=0.5) +
   scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
+    labels =c("Chinook","Chum","Coho","Pink","Sockeye"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
   theme_sleek() + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
 
@@ -529,7 +513,7 @@ p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
     position=position_dodge(0.5), alpha=0.5) +
   scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Sockeye","Coho","Pink","Chum"))+
+    labels =c("Chinook","Chum","Coho","Pink","Sockeye"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
   theme_sleek() + coord_flip() + ylim(c(-0.4,0.4))
 
