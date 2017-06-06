@@ -227,42 +227,42 @@ g1 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01A" & cfec.raw$spec %in% c("CHUM","C
   ylab("Species %") + xlab("") + ggtitle("SE-seine") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
     'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name="Species",
-    labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none") + theme_sleek()
+    labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none")
 
 g2 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01E" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("PWS-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
 
 g3 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01K" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("KO-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
 
 g4 = group_by(cfec.raw[cfec.raw$p_fshy=="S 01M" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("AP-seine") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name = "Species", labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none") + theme_sleek()
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]), name = "Species", labels =c("Chinook","Chum","Coho","Pink","Sockeye")) + theme(legend.position="none")
 
 g5 = group_by(cfec.raw[cfec.raw$p_fshy=="S 03A" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK"),], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("SE-gillnet") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
 
 g6 = group_by(cfec.raw[cfec.raw$p_fshy=="S 03E" & cfec.raw$spec %in% c("CHUM","COHO","SOCK","PINK","CHNK") & cfec.raw$year > 0,], year, spec, p_fshy) %>%
   summarize(p = sum(g_earn)) %>% group_by(year, p_fshy) %>% mutate(p = p/sum(p), col = as.numeric(as.factor(spec))) %>%
   ggplot(aes(year, p, group=spec, color = spec)) + geom_line() +  
   ylab("Species %") + xlab("") + ggtitle("PWS-gillnet") + theme(legend.position="none") + 
 scale_colour_manual(values = c('CHNK'=cbPalette[1], 'CHUM'=cbPalette[2], 
-    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5])) + theme_sleek()
+    'COHO'=cbPalette[3], 'PINK'=cbPalette[4], 'SOCK'=cbPalette[5]))
 
 dat.diff = readRDS(file="../data-generated/salmon-diff-for-modeling.rds")
 dat.diff = dat.diff[which(dat.diff$revenue >= 10000 & dat.diff$revenue.prev >= 10000), ]
