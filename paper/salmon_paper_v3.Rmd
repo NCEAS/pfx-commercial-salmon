@@ -4,13 +4,13 @@ title: Effects of increased specialization and hatchery production on revenue va
 author: "Eric, Sean, Ole, Rich, Jordan, Jen, Anne, Alan, Milo, Ben"
 date: ''
 output:
-  word_document: default
   pdf_document:
     fig_caption: yes
     includes:
       in_header: options.sty
     latex_engine: xelatex
   html_document: default
+  word_document: default
 csl: journal-of-applied-ecology.csl
 bibliography: CatchPortfolios_salmon.bib
 ---
