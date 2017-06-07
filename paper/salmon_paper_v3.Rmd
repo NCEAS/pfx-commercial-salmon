@@ -1,50 +1,18 @@
 ---
 title: Effects of increased specialization and hatchery production on revenue variability
   of Alaskan salmon fishers
-author: 
-  - name: Eric J. Ward
-    affiliation: 1
-  - name: Sean C. Anderson
-    affiliation: 2
-  - name: Andrew O. Shelton
-    affiliation: 1
-  - name: Richard E. Brenner
-    affiliation: 3
-  - name: Milo D. Adkison
-    affiliation: 4
-  - name: Anne H. Beaudreau
-    affiliation: 3  
-  - name: Jordan T. Watson
-    affiliation: 5  
-  - name: Jennifer C. Shriver
-    affiliation: 3
-  - name: Alan C. Haynie
-    affiliation: 6
-  - name: Benjamin C. Williams
-    affiliation: 3    
-address:
-  - code: 1
-    address: Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle WA, 98112, USA
-  - code: 2
-    address: School of Aquatic and Fishery Sciences, Box 355020, University of Washington, Seattle, WA 98195, USA
-  - code: 3
-    address: Division of Commercial Fisheries, Alaska Department of Fish and Game, PO Box 115526, Juneau, AK 99811, USA
-  - code: 4
-    address: College of Fisheries and Ocean Sciences, University of Alaska Fairbanks, 17101 Point Lena Loop Rd, Juneau, AK, 99801, USA
-  - code: 5
-    address: Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Auke Bay Laboratories, 17109 Pt. Lena Loop Rd., Juneau, AK 99801, USA
-  - code: 6
-    address: Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Bldg 4, 7600 Sand Point Way NE, Seattle, WA, 98115, USA
-
+author: Eric J. Ward$^1$, Sean C. Anderson$^2$, Andrew O. Shelton$^1$, Richard E.
+  Brenner$^3$, Milo D. Adkison$^4$, Anne H. Beaudreau$^3$, Jordan T. Watson$^5$, Jennifer
+  C. Shriver$^3$, Alan C. Haynie$^6$, Benjamin C. Williams$^3$
 date: ''
 output:
+  word_document: default
   pdf_document:
     fig_caption: yes
     includes:
       in_header: options.sty
     latex_engine: xelatex
   html_document: default
-  word_document: default
 csl: journal-of-applied-ecology.csl
 bibliography: CatchPortfolios_salmon.bib
 ---
@@ -66,6 +34,15 @@ library(ggrepel)
 library(cowplot)
 modelname = "model-linear-iid" # model-linear-nointeractions
 ```
+
+
+$^1$Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle WA, 98112, USA\
+$^2$School of Aquatic and Fishery Sciences, Box 355020, University of Washington, Seattle, WA 98195, USA\
+$^3$Division of Commercial Fisheries, Alaska Department of Fish and Game, PO Box 115526, Juneau, AK 99811, USA\
+$^4$College of Fisheries and Ocean Sciences, University of Alaska Fairbanks, 17101 Point Lena Loop Rd, Juneau, AK, 99801, USA\
+$^5$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Auke Bay Laboratories, 17109 Pt. Lena Loop Rd., Juneau, AK 99801, USA\
+$^6$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Bldg 4, 7600 Sand Point Way NE, Seattle, WA, 98115, USA\
+
 
 ## Abstract
 \setlength\parindent{24pt}
