@@ -1,0 +1,67 @@
+---
+title: "Diagnostics"
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Diagnostics and residual plots
+
+```{r}
+load("analysis/model-linear-iid.Rdata")
+
+# calculate predicted values based on model output
+pars = rstan::extract(mod)
+
+mu = apply(pars$b0_str_yr, 2, mean)[str_yr_i] + 
+    b4_cov_i * apply(pars$b_4, 2, mean)[strategy_i]
+mat_indx = cbind(year_i, strategy_i)
+mu = mu + b1_cov_i * apply(pars$b_1, c(2,3), mean)[mat_indx] + 
+  b2_cov_i * apply(pars$b_2, c(2,3), mean)[mat_indx]
+diffdat$pred = mu + offset
+
+sigma = apply(pars$g0_strategy, 2, mean)[strategy_i] + 
+    b4_cov_i * apply(pars$g_4, 2, mean)[strategy_i]
+sigma = sigma + b1_cov_i * apply(pars$g_1, c(2,3), mean)[mat_indx] + 
+  b2_cov_i * apply(pars$g_2, c(2,3), mean)[mat_indx]
+diffdat$sigma = (sigma + mean(pars$g0))
+```
+
+## Diagnostics for model of individual revenues
+
+```{r, fig.pos="placeHere", fig.cap="Predicted vs Observed values for variance function model of individual revenues.", echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggsidekick)
+
+ggplot(diffdat, aes(pred, y_i)) + 
+  geom_point(alpha = 0.4, col="grey30", size=1) + 
+  xlab("Predicted") + ylab("Observed") + theme_sleek() + geom_abline(intercept = 0, slope=1)
+
+```
+
+```{r, fig.pos="placeHere", fig.cap="Residuals vs change in catch diversity for variance function model of individual revenues (Anderson et al. 2017, SI).", echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+ggplot(diffdat, aes(specDiv.change, y_i - pred)) + 
+  geom_point(alpha = 0.4, col="grey30", size=0.5) + 
+  xlab("Change in catch diversity") + ylab("Residuals") + theme_sleek() + facet_wrap(~strategy_permit, scale="free") + geom_hline(yintercept=0, color="red")
+
+```
+
+```{r, fig.pos="placeHere", fig.cap="Residuals vs change in catch diversity:previous catch diversity for variance function model of individual revenues (Anderson et al. 2017, SI).", echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+ggplot(diffdat, aes(specDiv.change*specdiv.prev, y_i - pred)) + 
+  geom_point(alpha = 0.4, col="grey30", size=0.5) + 
+  xlab("Change in catch diversity") + ylab("Residuals") + theme_sleek() + facet_wrap(~strategy_permit, scale="free") + geom_hline(yintercept=0, color="red")
+
+```
+
+```{r, fig.pos="placeHere", fig.cap="Predicted revenue versus standard deviation of revenue from estimated model of individual revenues.", echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+ggplot(diffdat, aes(pred, sigma)) + 
+  geom_point(alpha = 0.4, col="grey30", size=0.5) + 
+  xlab("Ln mean predicted revenue") + ylab("Ln (sigma)") + theme_sleek() + facet_wrap(~strategy_permit, scale="free")
+```
+
