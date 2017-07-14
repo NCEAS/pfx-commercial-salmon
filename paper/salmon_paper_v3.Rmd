@@ -47,32 +47,22 @@ $^6$Alaska Fisheries Science Center, National Marine Fisheries Service, National
 ## Abstract
 \setlength\parindent{24pt}
 
-Individual commercial fishers may experience a number of benefits from
+1. Individual commercial fishers may experience a number of benefits from
 diversifying the species they catch such as reduced year-to-year variability in
 annual revenue and increases in average revenue. However, fishers can only
 increase their catch species diversity if they own fishing permits that allow
-multiple species to be targeted, or if they own multiple permits. Further,
-regulatory factors may disincentivize or prohibit individuals from holding
-multiple permits and permit cost may be a barrier to permit diversification.
-Individuals holding a single permit may only be able to increase species
+multiple species to be targeted, or if they own multiple permits. Individuals holding a single permit may only be able to increase species
 diversity within the confines of their permit (e.g., by fishing longer or over
-a broader spatial area). Using a large dataset of individual salmon fishers in
+a broader spatial area).  
+2. Using a large dataset of individual salmon fishers in
 Alaska, we build a Bayesian variance-function regression model to understand
 how diversification impacts revenue and revenue variability, and how these
-effects have evolved since the 1970s. Applying these models to six salmon
-fisheries that encompass a broad geographic range and a variety of harvesting
-methods and species, we find that the majority of these fisheries have
-experienced reduced catch diversity through time, and increasing benefits of
-specialization on mean individual revenues. One factor that has been
-hypothesized to reduce catch diversity while also decreasing revenue
-variability is large-scale hatchery production. While our results suggest
-negative correlations between hatchery returns and catch diversity for some
-fisheries, we find little evidence for a change in variability associated with
-increased hatchery production. However, individuals participating in fisheries
+effects have evolved since the 1970s.  
+3. Applying these models to six salmon fisheries that encompass a broad geographic range and a variety of harvesting methods and species, we find that the majority of these fisheries have experienced reduced catch diversity through time, and increasing benefits of specialization on mean individual revenues.  
+4. One factor that has been hypothesized to reduce catch diversity while also decreasing revenue variability is large-scale hatchery production. While our results suggest negative correlations between hatchery returns and catch diversity for some fisheries, we find little evidence for a change in variability associated with increased hatchery production.  
+5. We find that individuals participating in Alaska salmon fisheries don't always benefit from targeting a diverse catch portfolio. Fishers have some control over their own distribution of effort in space and time, but are also affected by a number of external factors including demand, prices offered by processors, fluctuations in fish abundance. Life history variation of the species targeted may also play a role - individuals participating in Alaskan fisheries
 with high contributions of hatchery pink salmon --- which have the shortest and
-least variable life-history traits of all Pacific salmon --- have the highest
-variability in year-to-year revenue, suggesting that risk may be a function of
-life-history characteristics and population portfolio of species targeted.
+least variable life-history traits of all Pacific salmon --- also have the highest variability in year-to-year revenue.
   
 ## Introduction  
 
