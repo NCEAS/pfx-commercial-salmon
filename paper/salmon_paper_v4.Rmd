@@ -2,7 +2,7 @@
 title: Effects of increased specialization on revenue of Alaskan salmon fishers over
   four decades
 author: Eric J. Ward$^1$, Sean C. Anderson$^2$, Andrew O. Shelton$^1$, Richard E.
-  Brenner$^3$, Milo D. Adkison$^4$, Anne H. Beaudreau$^3$, Jordan T. Watson$^5$, Jennifer
+  Brenner$^3$, Milo D. Adkison$^4$, Anne H. Beaudreau$^4$, Jordan T. Watson$^5$, Jennifer
   C. Shriver$^3$, Alan C. Haynie$^6$, Benjamin C. Williams$^3$
 date: ''
 output:
