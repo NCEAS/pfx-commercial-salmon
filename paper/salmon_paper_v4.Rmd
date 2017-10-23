@@ -1,9 +1,9 @@
 ---
 title: Effects of increased specialization on revenue of Alaskan salmon fishers over
   four decades
-author: Eric J. Ward$^1$, Sean C. Anderson$^2$, Andrew O. Shelton$^1$, Richard E.
-  Brenner$^3$, Milo D. Adkison$^4$, Anne H. Beaudreau$^4$, Jordan T. Watson$^5$, Jennifer
-  C. Shriver$^3$, Alan C. Haynie$^6$, Benjamin C. Williams$^3$
+author: Eric J. Ward$^1$, Sean C. Anderson$^2,^3$, Andrew O. Shelton$^1$, Richard
+  E. Brenner$^4$, Milo D. Adkison$^5$, Anne H. Beaudreau$^5$, Jordan T. Watson$^6$,
+  Jennifer C. Shriver$^4$, Alan C. Haynie$^7$, Benjamin C. Williams$^4$
 date: ''
 output:
   pdf_document:
@@ -38,25 +38,24 @@ modelname = "model-linear-iid" # model-linear-nointeractions
 
 $^1$Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle WA, 98112, USA\
 $^2$School of Aquatic and Fishery Sciences, Box 355020, University of Washington, Seattle, WA 98195, USA\
-$^3$Division of Commercial Fisheries, Alaska Department of Fish and Game, PO Box 115526, Juneau, AK 99811, USA\
-$^4$College of Fisheries and Ocean Sciences, University of Alaska Fairbanks, 17101 Point Lena Loop Rd, Juneau, AK, 99801, USA\
-$^5$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Auke Bay Laboratories, 17109 Pt. Lena Loop Rd., Juneau, AK 99801, USA\
-$^6$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Bldg 4, 7600 Sand Point Way NE, Seattle, WA, 98115, USA\
+$^3$Pacific Biological Station, Fisheries and Oceans Canada, Nanaimo, BC, V6T 6N7, Canada
+$^4$Division of Commercial Fisheries, Alaska Department of Fish and Game, PO Box 115526, Juneau, AK 99811, USA\
+$^5$College of Fisheries and Ocean Sciences, University of Alaska Fairbanks, 17101 Point Lena Loop Rd, Juneau, AK, 99801, USA\
+$^6$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Auke Bay Laboratories, 17109 Pt. Lena Loop Rd., Juneau, AK 99801, USA\
+$^7$Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanographic and Atmospheric Administration, Bldg 4, 7600 Sand Point Way NE, Seattle, WA, 98115, USA\
 
 
 ## Abstract
 \setlength\parindent{24pt}
 
-1. Theory and previous studies have shown that commercial fishers with a diversified catch across multiple species may experience benefits 
- such as increased revenue and reduced variability in
-revenue. However, fishers can only
+1. Theory and previous studies have shown that commercial fishers with a diversified catch across multiple species may experience benefits such as increased revenue and reduced variability in revenue. However, fishers can only
 increase the species diversity of their catch if they own fishing permits that allow
 multiple species to be targeted, or if they own multiple single-species permits. Individuals holding a single permit can only increase catch diversity within the confines of their permit (e.g., by fishing longer or over a broader spatial area).
 2. Using a large dataset of individual salmon fishers in
 Alaska, we build a Bayesian variance-function regression model to understand
 how diversification impacts revenue and revenue variability, and how these
 effects have evolved since the 1970s.
-3. Applying these models to six salmon fisheries that encompass a broad geographic range and a variety of harvesting methods and species, we find that the majority of these fisheries have experienced reduced catch diversity through time and increasing benefits of specialization on mean individual revenues, opposite of what theory predicts.
+3. Applying these models to six salmon fisheries that encompass a broad geographic range and a variety of harvesting methods and species, we find that the majority of these fisheries have experienced reduced catch diversity through time and increasing benefits of specialization on mean individual revenues.
 4. One factor that has been hypothesized to reduce catch diversity in salmon fisheries is large-scale hatchery production. While our results suggest negative correlations between hatchery returns and catch diversity for some fisheries, we find little evidence for a change in variability of annual catches associated with increased hatchery production.
 5. We find that individuals participating in Alaska salmon fisheries do not always benefit from targeting a diverse catch portfolio. Fishers have some control over their own distribution of effort in space and time, but are also affected by a number of external factors including demand, prices offered by processors, and fluctuations in fish abundance. Life history variation of the species targeted may also play a role. Individuals participating in Alaskan fisheries with high contributions of pink salmon --- which have the shortest life cycles of all Pacific salmon --- also have the highest variability in year-to-year revenue.
 
@@ -280,7 +279,7 @@ weight2$Permit[which(weight2$Permit=="S05B")] = "State-troll"
 
 weight2$wn = log10(weight2$w/weight2$n)
 weight2 = rename(weight2, permit=Permit, value = wn)
-weight2$datatype = "log10 (avgerage catch)"
+weight2$datatype = "log10 (average catch)"
 datf = as.data.frame(rbind(people2[,c("permit","year","value","datatype")],
   weight2[,c("permit","year","value","datatype")]))
 
@@ -481,7 +480,7 @@ p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
   geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
   ylab("Effect size (mean)") +
   xlab("") +
-  geom_errorbar(aes(ymin=bestimate-1.96*bsd, ymax=bestimate+1.96*bsd),
+  geom_linerange(aes(ymin=bestimate-1.96*bsd, ymax=bestimate+1.96*bsd),
     position=position_dodge(0.5), alpha=0.5) +
   scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
@@ -493,7 +492,7 @@ p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
   geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
   ylab("Effect size (sd)") +
   xlab("") +
-  geom_errorbar(aes(ymin=estimate-1.96*sd, ymax=estimate+1.96*sd),
+  geom_linerange(aes(ymin=estimate-1.96*sd, ymax=estimate+1.96*sd),
     position=position_dodge(0.5), alpha=0.5) +
   scale_color_manual(values = c('Chinook'=cbPalette[1], 'Chum'=cbPalette[2],
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
