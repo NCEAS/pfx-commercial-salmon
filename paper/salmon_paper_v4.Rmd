@@ -395,25 +395,26 @@ est = extract(mod, permute="TRUE")
 # --------------------------------- 
 # revised fig
 
-# # b1 <- readRDS("B1.rds")
-# pp2 <- reshape2::melt(b1)
-# names(pp2) <- c("iter", "x", "region", "y")
+b1 <- est$b_1
+pp2 <- reshape2::melt(b1)
+names(pp2) <- c("iter", "x", "region", "y")
+#pp2$x = seq(1976,2016)[pp2$x]
 
 ## # interpolated version:
-## xout <- seq(1, max(pp2$x), 0.5)
-## pp2 <- filter(pp2, iter %in% sample(seq_len(max(pp2$iter)), 700)) %>%
-##   group_by(iter, region) %>%
-##   do(data.frame(approx(x = .$x, y = .$y, xout = xout)))
+xout <- seq(1, max(pp2$x), 0.5)
+pp2 <- filter(pp2, iter %in% sample(seq_len(max(pp2$iter)), 700)) %>%
+  group_by(iter, region) %>%
+  do(data.frame(approx(x = .$x, y = .$y, xout = xout)))
 
-# min_y <- quantile(pp2$y, probs = 0)
-# max_y <- quantile(pp2$y, probs = 1)
-# dp <- plyr::ddply(pp2, c("x", "region"), function(x) {
-#   temp <- data.frame(density(x$y, n = 900, from = min_y, to = max_y)[c("x", "y")])
-#   data.frame(x = rep(unique(x$x), nrow(temp)),
-#     region = rep(unique(x$region), nrow(temp)), y = temp$x,
-#     density = temp$y, median = median(x$y), stringsAsFactors = FALSE)
-# })
-# pal <- RColorBrewer::brewer.pal(5, "Blues")
+min_y <- quantile(pp2$y, probs = 0)
+max_y <- quantile(pp2$y, probs = 1)
+dp <- plyr::ddply(pp2, c("x", "region"), function(x) {
+   temp <- data.frame(density(x$y, n = 900, from = min_y, to = max_y)[c("x", "y")])
+   data.frame(x = rep(unique(x$x), nrow(temp)),
+   region = rep(unique(x$region), nrow(temp)), y = temp$x,
+   density = temp$y, median = median(x$y), stringsAsFactors = FALSE)
+})
+pal <- RColorBrewer::brewer.pal(5, "Blues")
 
 ## fixme:
 # dp$permits[which(dp$permits==999)] = "SE-seine"
@@ -423,63 +424,66 @@ est = extract(mod, permute="TRUE")
 # dp$permits[which(dp$permits==999)] = "SE-drift"
 # dp$permits[which(dp$permits==999)] = "PWS-drift"
 
-# ggplot(dp, aes(x, y, alpha = density^0.65)) +
-#   geom_raster(fill = pal[[5]]) +
-#   scale_alpha_continuous(range=c(0.0001, 1)) +
-#   facet_wrap(~region) +
-#   geom_line(aes(x = x, y = median), col = pal[[5]], alpha = 1) +
-#   ggsidekick::theme_sleek() +
-#   guides(alpha = FALSE, fill = FALSE) +
-#   xlab("Year") + 
-#   ylab("Effect of increased catch diversity on mean revenue")
+dp$x = dp$x + 1975 # scale to 1976-2016
+dp$region = c("SE-seine", "PWS-seine", "KO-seine", "AP-seine",
+  "SE-drift", "PWS-drift")[dp$region]
+
+ggplot(dp, aes(x, y, alpha = density^0.7)) +
+   geom_raster(fill = pal[[5]]) +
+   scale_alpha_continuous(range=c(0.0001, 1)) +
+   facet_wrap(~region) +
+   geom_line(aes(x = x, y = median), col = pal[[5]], alpha = 1) +
+   ggsidekick::theme_sleek() +
+   guides(alpha = FALSE, fill = FALSE) +
+   xlab("Year") + 
+   ylab("Effect of increased catch diversity on mean revenue")
 
 # ---------------------------------
 
 # start with making time series of estimates on mean
 # challenge is that they're time varying quadratic functions
 # do facet_wrap of estimates by year
-
 # effect of adding more 1 species from 1. specdiv.prev = 1
-
-specdiv.prev = seq(1, 5, by=0.1)
-specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
-x1 = log(specdiv/specdiv.prev)
-x2 = log(specdiv/specdiv.prev) * specdiv.prev
-x3 = log(specdiv/specdiv.prev) * specdiv.prev^2
-
-df = expand.grid("year"=1:length(years), "diversity" = seq(1,length(x1)), "permit"=1:6)
-df$permits = permits[df$permit]
-df$years = years[df$year]
-df$x = specdiv.prev[df$diversity]
-df$pred = 0
-df$pred_median = 0
-df$low = 0
-df$high = 0
-b0_indx = match(paste(as.character(df$years), as.character(df$permits)), as.character(yearpermit$yrpermit))
-for(i in 1:nrow(df)) {
-  #tmp = est$b0_str_yr[,b0_indx[i]] +
-  tmp =
-    x1[df$diversity[i]] * (est$b_1[,df$year[i], df$permit[i]])# +
-    #x2[df$diversity[i]] * (est$b_2[,df$year[i], df$permit[i]]+est$b2_str_yr_mu)# +
-    #x3[df$diversity[i]] * (est$b_3[,df$year[i], df$permit[i]]+est$b3_str_yr_mu)
-  df$pred[i] = mean(tmp)
-  df$pred_median[i] = median(tmp)
-  df$low[i] = quantile(tmp,0.025)
-  df$high[i] = quantile(tmp,0.975)
-}
-
-df$permits[which(df$permits=="S01A")] = "SE-seine"
-df$permits[which(df$permits=="S01E")] = "PWS-seine"
-df$permits[which(df$permits=="S01K")] = "KO-seine"
-df$permits[which(df$permits=="S01M")] = "AP-seine"
-df$permits[which(df$permits=="S03A")] = "SE-drift"
-df$permits[which(df$permits=="S03E")] = "PWS-drift"
-
-ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
-  geom_ribbon(aes(ymin=low,ymax=high), fill="blue",alpha=0.4) +
-  geom_line(col="blue") +
-  facet_wrap(~permits) + xlab("Year") + ylab("Effect of increased catch diversity on mean revenue") + geom_hline(yintercept=0, color="red", linetype = 2, alpha = 0.3) + theme_sleek()
-
+#
+# specdiv.prev = seq(1, 5, by=0.1)
+# specdiv = specdiv.prev + 1 # always add 1 more in these comparisons
+# x1 = log(specdiv/specdiv.prev)
+# x2 = log(specdiv/specdiv.prev) * specdiv.prev
+# x3 = log(specdiv/specdiv.prev) * specdiv.prev^2
+# 
+# df = expand.grid("year"=1:length(years), "diversity" = seq(1,length(x1)), # "permit"=1:6)
+# df$permits = permits[df$permit]
+# df$years = years[df$year]
+# df$x = specdiv.prev[df$diversity]
+# df$pred = 0
+# df$pred_median = 0
+# df$low = 0
+# df$high = 0
+# b0_indx = match(paste(as.character(df$years), as.character(df$permits)), # as.character(yearpermit$yrpermit))
+# for(i in 1:nrow(df)) {
+#   #tmp = est$b0_str_yr[,b0_indx[i]] +
+#   tmp =
+#     x1[df$diversity[i]] * (est$b_1[,df$year[i], df$permit[i]])# +
+#     #x2[df$diversity[i]] * (est$b_2[,df$year[i], # df$permit[i]]+est$b2_str_yr_mu)# +
+#     #x3[df$diversity[i]] * (est$b_3[,df$year[i], # df$permit[i]]+est$b3_str_yr_mu)
+#   df$pred[i] = mean(tmp)
+#   df$pred_median[i] = median(tmp)
+#   df$low[i] = quantile(tmp,0.025)
+#   df$high[i] = quantile(tmp,0.975)
+# }
+# 
+# df$permits[which(df$permits=="S01A")] = "SE-seine"
+# df$permits[which(df$permits=="S01E")] = "PWS-seine"
+# df$permits[which(df$permits=="S01K")] = "KO-seine"
+# df$permits[which(df$permits=="S01M")] = "AP-seine"
+# df$permits[which(df$permits=="S03A")] = "SE-drift"
+# df$permits[which(df$permits=="S03E")] = "PWS-drift"
+# 
+# ggplot(df[df$diversity==1,], aes(x=years,y=pred,group=permits)) +
+#   geom_ribbon(aes(ymin=low,ymax=high), fill="blue",alpha=0.4) +
+#   geom_line(col="blue") +
+#   facet_wrap(~permits) + xlab("Year") + ylab("Effect of increased catch # diversity on mean revenue") + geom_hline(yintercept=0, color="red", linetype = # 2, alpha = 0.3) + theme_sleek()
+# 
 # for revision,
 #group_by(df, permits) %>% summarize(lo = min(low), hi = max(high)) # %>% ungroup() %>% summarize(lo = mean(lo), hi = mean(hi))
 ```
