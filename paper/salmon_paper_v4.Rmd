@@ -392,6 +392,49 @@ yearpermit=yearpermitold
 
 est = extract(mod, permute="TRUE")
 
+# --------------------------------- 
+# revised fig
+
+# # b1 <- readRDS("B1.rds")
+# pp2 <- reshape2::melt(b1)
+# names(pp2) <- c("iter", "x", "region", "y")
+
+## # interpolated version:
+## n_ <- max(pp2$x) * 2
+## pp2 <- filter(pp2, iter %in% sample(seq_len(max(pp2$iter)), 2000)) %>%
+##   group_by(iter, region) %>%
+##   do(data.frame(approx(x = .$x, y = .$y, n = n_)))
+
+# min_y <- quantile(pp2$y, probs = 0.0001)
+# max_y <- quantile(pp2$y, probs = 0.9999)
+# dp <- plyr::ddply(pp2, c("x", "region"), function(x) {
+#   temp <- data.frame(density(x$y, n = 1000, from = min_y, to = max_y)[c("x", "y")])
+#   data.frame(x = rep(unique(x$x), nrow(temp)),
+#     region = rep(unique(x$region), nrow(temp)), y = temp$x,
+#     density = temp$y, median = median(x$y), stringsAsFactors = FALSE)
+# })
+# pal <- RColorBrewer::brewer.pal(5, "Blues")
+
+## fixme:
+# dp$permits[which(dp$permits==999)] = "SE-seine"
+# dp$permits[which(dp$permits==999)] = "PWS-seine"
+# dp$permits[which(dp$permits==999)] = "KO-seine"
+# dp$permits[which(dp$permits==999)] = "AP-seine"
+# dp$permits[which(dp$permits==999)] = "SE-drift"
+# dp$permits[which(dp$permits==999)] = "PWS-drift"
+
+# ggplot(dp, aes(x, y, alpha = density^0.65)) +
+#   geom_raster(fill = pal[[5]]) +
+#   scale_alpha_continuous(range=c(0.0001, 1)) +
+#   facet_wrap(~region) +
+#   geom_line(aes(x = x, y = median), col = pal[[5]], alpha = 1) +
+#   ggsidekick::theme_sleek() +
+#   guides(alpha = FALSE, fill = FALSE) +
+#   xlab("Year") + 
+#   ylab("Effect of increased catch diversity on mean revenue")
+
+# ---------------------------------
+
 # start with making time series of estimates on mean
 # challenge is that they're time varying quadratic functions
 # do facet_wrap of estimates by year
