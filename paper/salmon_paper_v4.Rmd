@@ -370,7 +370,7 @@ print(g)
 
 \break
 
-```{r fig4, fig.pos="placeHere", fig.cap="Time-varying effects of increasing the effective species diversity of catch (1/Simpson's diversity) from 1 to 2 species on mean revenue (presented as log ratios). The solid lines indicate the mean effect and the shaded region represents 95% CIs. Labels indicate regions and gear type --- Alaska Peninsula (AP), Kodiak (KO), Prince William Sound (PWS), Southeast Alaska (SE) seine net or drift gill net.", echo=FALSE}
+```{r fig4, fig.pos="placeHere", fig.cap="Time-varying effects of increasing the effective species diversity of catch (1/Simpson's diversity) from 1 to 2 species on mean revenue (presented as log ratios). The solid lines indicate the mean effect and 95% credible intervals are shown with shading proportional to density. Labels indicate regions and gear type --- Alaska Peninsula (AP), Kodiak (KO), Prince William Sound (PWS), Southeast Alaska (SE) seine net or drift gill net.", echo=FALSE}
 # make yearpermit df
 diffdat = readRDS(file="../data-generated/salmon.rds")
 years = seq(min(diffdat$year), max(diffdat$year))
@@ -436,7 +436,8 @@ ggplot(dp, aes(x, y, alpha = density^0.7)) +
    ggsidekick::theme_sleek() +
    guides(alpha = FALSE, fill = FALSE) +
    xlab("Year") + 
-   ylab("Effect of increased catch diversity on mean revenue")
+   ylab("Effect of increased catch diversity on mean revenue") + 
+  geom_hline(yintercept=0, color="red", linetype = 2, alpha = 0.3)
 
 # ---------------------------------
 
