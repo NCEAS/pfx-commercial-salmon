@@ -153,7 +153,7 @@ seasons$permit[which(seasons$permit=="S 01M")] = "AP-seine"
 seasons$permit[which(seasons$permit=="S 03A")] = "SE-gillnet"
 seasons$permit[which(seasons$permit=="S 03E")] = "PWS-gillnet"
 
-appendixPlot0_p1 = ggplot(seasons, aes(year, q, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Mean julian day") + theme_sleek()
+appendixPlot0_p1 = ggplot(seasons, aes(year, q, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Mean Julian day") + theme_sleek()
 
 appendixPlot0_p2 = ggplot(seasons, aes(year, length, color = permit, group=permit)) + geom_line() + xlab("Year") + ylab("Season length") + theme_sleek()
 ```
@@ -590,7 +590,7 @@ g1
 ```
 
 
-```{r figa12, echo=FALSE, fig.pos="placeHere", fig.cap = "As model validation, we can compare the estimated intercepts for PWS S01E (purse seine) representing average year to year change in revenue versus the change year over year in ln(pink salmon returns). Correlation between them is ~ 0.8. This suggests (as expected) people on average make a lot more money in years when pink salmon returns are high. [EW side note: diversification may only be beneficial here when returns and prices are both low.]"}
+```{r figa12, echo=FALSE, fig.pos="placeHere", fig.cap = "As model validation, we can compare the estimated intercepts for PWS S01E (purse seine) representing average year to year change in revenue versus the change year over year in ln(pink salmon returns). Correlation between them is ~ 0.8. This suggests (as expected) people on average make a lot more money in years when pink salmon returns are high."}
 
 yearpermit$b0 = apply(est$b0_str_yr,2,median)
 yearpermit$b0_low = apply(est$b0_str_yr,2,quantile,0.025)
@@ -630,8 +630,8 @@ Previous work on long term trends in Alaska salmon markets have highlighted effe
 
 ### Season length  
 
-There appears to be no significant trend in season length (defined as the difference between 95% CIs) or mean julian day for any fishery. In all cases, the dates are weighted by the earnings associated with landed catch.  
+There appears to be no significant trend in season length (defined as the difference between 95% CIs) or mean Julian day for any fishery. In all cases, the dates are weighted by the earnings associated with landed catch.  
 
-```{r, fig.cap="Trends in mean julian day and season length by fishery", fig.pos="placeHere", echo=FALSE, fig.height=3.5}
+```{r, fig.cap="Trends in mean Julian day and season length by fishery", fig.pos="placeHere", echo=FALSE, fig.height=3.5}
 gridExtra::grid.arrange(appendixPlot0_p1, appendixPlot0_p2, ncol = 1)
 ```
