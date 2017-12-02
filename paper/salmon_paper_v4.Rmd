@@ -220,8 +220,9 @@ g2 = ggplot(hatch, aes(Year, value, color=Species)) +
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Sockeye","Coho","Pink","Chum")) + theme_sleek()
 
+pdf("Figure1_final.pdf", width=7, height=6)
 gridExtra::grid.arrange(g1, g2)
-
+dev.off()
 # join datasets together for modeling
 names(dat) = tolower(names(dat))
 names(hatch) = tolower(names(hatch))
@@ -316,9 +317,9 @@ datf = rbind(datf, tempd)
 datf = rename(datf, Permit = permit)
 
 datf$value[which(datf$year==1989 & datf$Permit == "KO-seine")] = NA
-
+pdf("Figure2_final.pdf", width=7, height=6)
 ggplot(datf, aes(year, value, color = Permit, group = Permit)) + geom_line() + ylab("") + xlab("Year") + facet_wrap(~datatype, scale="free_y") + theme_sleek()
-
+dev.off()
 ```
 
 \break
@@ -365,7 +366,9 @@ g <- ggplot(dat.annual,
   scale_y_continuous(breaks = seq(0.2, 1, 0.2)) +
   theme_sleek() #+
   # scale_x_log10()
+pdf("Figure3_final.pdf", width=7, height=6)
 print(g)
+dev.off()
 ```
 
 \break
@@ -428,6 +431,7 @@ dp$x = dp$x + 1975 # scale to 1976-2016
 dp$region = c("SE-seine", "PWS-seine", "KO-seine", "AP-seine",
   "SE-drift", "PWS-drift")[dp$region]
 
+pdf("Figure4_final.pdf", height=6, width=7)
 ggplot(dp, aes(x, y, alpha = density^0.7)) +
    geom_raster(fill = pal[[5]]) +
    scale_alpha_continuous(range=c(0.0001, 1)) +
@@ -438,7 +442,7 @@ ggplot(dp, aes(x, y, alpha = density^0.7)) +
    xlab("Year") + 
    ylab("Effect of increased catch diversity on mean revenue") + 
   geom_hline(yintercept=0, color="red", linetype = 2, alpha = 0.3)
-
+dev.off()
 # ---------------------------------
 
 # start with making time series of estimates on mean
@@ -507,8 +511,9 @@ p1 = ggplot(d, aes(p, tot_div, col=year)) +
 # data frame r2
 dfr2 = data.frame(p_fshy = unique(d$p_fshy), lab=c("paste(R ^ 2, \" = .03\")","paste(R ^ 2, \" = .01\")","paste(R ^ 2, \" = .05\")","paste(R ^ 2, \" = .56\")"), p = Inf, tot_div = Inf, 
   year = Inf)
+pdf("Figure5_final.pdf", width=7, height=6)
 p1 + geom_text(data = dfr2, aes(label =lab, hjust=1.1, vjust=1.3), parse=TRUE)
-
+dev.off()
 ```
 
 \break
@@ -534,7 +539,7 @@ p1 = ggplot(df, aes(x=fishery, y=bestimate, group=species, color=species)) +
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Chum","Coho","Pink","Sockeye"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_sleek() + coord_flip() + theme(legend.position="none") + ylim(c(-0.4,0.4))
+  theme_sleek() + coord_flip() + theme(legend.position="none") + ylim(c(-0.35,0.35))
 
 p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
   geom_point(position=position_dodge(0.5), alpha = 0.5, size=3) +
@@ -546,10 +551,12 @@ p2 = ggplot(df, aes(x=fishery, y=estimate, group=species, color=species)) +
     'Coho'=cbPalette[3], 'Pink'=cbPalette[4], 'Sockeye'=cbPalette[5]), name="Species",
     labels =c("Chinook","Chum","Coho","Pink","Sockeye"))+
   geom_hline(aes(yintercept=0), linetype = 2) +
-  theme_sleek() + coord_flip() + ylim(c(-0.4,0.4))
+  theme_sleek() + coord_flip() + ylim(c(-0.35,0.35))
 
+pdf("Figure6_final.pdf", width=7, height=5)
 plot_grid(p1, p2, align = "h", nrow = 1, rel_widths = c(0.43, 0.57))
 #gridExtra::grid.arrange(p1, p2, nrow=1)
+dev.off()
 ```
 
 \break
